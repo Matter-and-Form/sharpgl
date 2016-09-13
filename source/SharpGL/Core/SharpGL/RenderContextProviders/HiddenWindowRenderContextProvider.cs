@@ -17,23 +17,25 @@ namespace SharpGL.RenderContextProviders
             GDIDrawingEnabled = true;
         }
 
-        /// <summary>
-        /// Creates the render context provider. Must also create the OpenGL extensions.
-        /// </summary>
-        /// <param name="openGLVersion">The desired OpenGL version.</param>
-        /// <param name="gl">The OpenGL context.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="bitDepth">The bit depth.</param>
-        /// <param name="parameter">The parameter</param>
-        /// <returns></returns>
-        public override bool Create(OpenGLVersion openGLVersion, OpenGL gl, int width, int height, int bitDepth, object parameter)
+		private Win32.WNDCLASSEX wndClass;
+
+		/// <summary>
+		/// Creates the render context provider. Must also create the OpenGL extensions.
+		/// </summary>
+		/// <param name="openGLVersion">The desired OpenGL version.</param>
+		/// <param name="gl">The OpenGL context.</param>
+		/// <param name="width">The width.</param>
+		/// <param name="height">The height.</param>
+		/// <param name="bitDepth">The bit depth.</param>
+		/// <param name="parameter">The parameter</param>
+		/// <returns></returns>
+		public override bool Create(OpenGLVersion openGLVersion, OpenGL gl, int width, int height, int bitDepth, object parameter)
         {
             //  Call the base.
             base.Create(openGLVersion, gl, width, height, bitDepth, parameter);
 
             //	Create a new window class, as basic as possible.                
-            Win32.WNDCLASSEX wndClass = new Win32.WNDCLASSEX();
+            wndClass = new Win32.WNDCLASSEX();
             wndClass.Init();
 		    wndClass.style			= Win32.ClassStyles.HorizontalRedraw | Win32.ClassStyles.VerticalRedraw | Win32.ClassStyles.OwnDC;
             wndClass.lpfnWndProc    = wndProcDelegate;
@@ -112,8 +114,11 @@ namespace SharpGL.RenderContextProviders
 		    //	Destroy the window.
 		    Win32.DestroyWindow(windowHandle);
 
-		    //	Call the base, which will delete the render context handle.
-            base.Destroy();
+			//  Unregister Class
+			Win32.UnregisterClass(wndClass.lpszClassName, wndClass.hInstance);
+
+			//	Call the base, which will delete the render context handle.
+			base.Destroy();
 	    }
 
         /// <summary>

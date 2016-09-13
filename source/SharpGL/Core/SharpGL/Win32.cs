@@ -578,9 +578,13 @@ namespace SharpGL
         [return: MarshalAs(UnmanagedType.U2)]
         public static extern short RegisterClassEx([In] ref WNDCLASSEX lpwcx);
 
-        #endregion
-        
-        [Flags]
+		[DllImport(User32, SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
+
+		#endregion
+
+		[Flags]
         public enum SetWindowPosFlags : uint
         {
             SWP_ASYNCWINDOWPOS = 0x4000,
