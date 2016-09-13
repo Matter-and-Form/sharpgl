@@ -107,7 +107,11 @@ namespace SharpGL.WPF
                         gl.LoadIdentity();
                     }
                 }
-            }
+
+				// JWH - FOR NEW RENDER METHOD
+				// Force re-creation of image buffer since size has changed
+				m_imageBuffer = null;
+			}
         }
 
         /// <summary>
@@ -124,7 +128,11 @@ namespace SharpGL.WPF
             {
                 //  Create OpenGL.
                 gl.Create(OpenGLVersion, RenderContextType, 1, 1, 32, null);
-            }
+
+				// JWH - FOR NEW RENDER METHOD
+				// Force re-set of dpi and format settings
+				m_dpiX = 0;
+			}
 
             //  Create our fast event args.
             eventArgsFast = new OpenGLEventArgs(gl);
@@ -145,12 +153,78 @@ namespace SharpGL.WPF
             timer.Interval = new TimeSpan(0, 0, 0, 0, (int)(1000.0 / FrameRate));
         }
 
-        /// <summary>
-        /// Handles the Tick event of the timer control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        void timer_Tick(object sender, EventArgs e)
+		// JWH - Fields to support the WritableBitmap method of rendering the image for display
+		byte[] m_imageBuffer;
+		WriteableBitmap m_writeableBitmap;
+		Int32Rect m_imageRect;
+		int m_imageStride;
+		double m_dpiX = 0;
+		double m_dpiY = 0;
+		PixelFormat m_format = PixelFormats.Bgra32;
+		int m_bytesPerPixel = 32 >> 3;
+
+		/// <summary>
+		/// JWH - FOR NEW RENDER METHOD
+		/// Fill the ImageSource from the provided bits IntPtr, using the provided hBitMap IntPtr
+		/// if needed to determine key data from the bitmap source.
+		/// </summary>
+		/// <param name="bits">An IntPtr to the bits for the bitmap image.  Generally provided from
+		/// DIBSectionRenderContextProvider.DIBSection.Bits or from
+		/// FBORenderContextProvider.InternalDIBSection.Bits.</param>
+		/// <param name="hBitmap">An IntPtr to the HBitmap for the image.  Generally provided from
+		/// DIBSectionRenderContextProvider.DIBSection.HBitmap or from
+		/// FBORenderContextProvider.InternalDIBSection.HBitmap.</param>
+		public void FillImageSource(IntPtr bits, IntPtr hBitmap)
+		{
+			// If DPI hasen't been set, use a call to HBitmapToBitmapSource to fill the info
+			// This should happen only ONCE (near the start of the application)
+			if (m_dpiX == 0)
+			{
+				var bitmapSource = BitmapConversion.HBitmapToBitmapSource(hBitmap);
+				m_dpiX = bitmapSource.DpiX;
+				m_dpiY = bitmapSource.DpiY;
+				m_format = bitmapSource.Format;
+				m_bytesPerPixel = gl.RenderContextProvider.BitDepth >> 3;
+				// FBO render context flips the image vertically, so transform to compensate
+				if (RenderContextType == SharpGL.RenderContextType.FBO)
+				{
+					image.RenderTransform = new ScaleTransform(1.0, -1.0);
+					image.RenderTransformOrigin = new Point(0.0, 0.5);
+				}
+				else
+				{
+					image.RenderTransform = Transform.Identity;
+					image.RenderTransformOrigin = new Point(0.0, 0.0);
+				}
+			}
+
+			// If the image buffer is null, create it
+			// This should happen when the size of the image changes
+			if (m_imageBuffer == null)
+			{
+				int width = gl.RenderContextProvider.Width;
+				int height = gl.RenderContextProvider.Height;
+
+				int imageBufferSize = width * height * m_bytesPerPixel;
+				m_imageBuffer = new byte[imageBufferSize];
+				m_writeableBitmap = new WriteableBitmap(width, height, m_dpiX, m_dpiY, m_format, null);
+				m_imageRect = new Int32Rect(0, 0, width, height);
+				m_imageStride = width * m_bytesPerPixel;
+			}
+
+			// Fill the image buffer from the bits and create the writeable bitmap
+			System.Runtime.InteropServices.Marshal.Copy(bits, m_imageBuffer, 0, m_imageBuffer.Length);
+			m_writeableBitmap.WritePixels(m_imageRect, m_imageBuffer, m_imageStride, 0);
+
+			image.Source = m_writeableBitmap;
+		}
+
+		/// <summary>
+		/// Handles the Tick event of the timer control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+		void timer_Tick(object sender, EventArgs e)
         {
 			DoRender();
 		}
@@ -195,12 +269,15 @@ namespace SharpGL.WPF
 
                             if (hBitmap != IntPtr.Zero)
                             {
-                                var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
+								// JWH - FOR NEW RENDER METHOD:
+								FillImageSource(provider.DIBSection.Bits, hBitmap);
 
-                                //  Copy the pixels over.
-                                image.Source = newFormatedBitmapSource;
-                            }
-                        }
+								//var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
+
+								////  Copy the pixels over.
+								//image.Source = newFormatedBitmapSource;
+							}
+						}
                         break;
                     case RenderContextType.NativeWindow:
                         break;
@@ -213,12 +290,16 @@ namespace SharpGL.WPF
 
                             if (hBitmap != IntPtr.Zero)
                             {
-                                var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
+								// JWH - FOR NEW RENDER METHOD:
+								// The FBORenderContextProvider flips the image vertically, so transform it
+								FillImageSource(provider.InternalDIBSection.Bits, hBitmap);
 
-                                //  Copy the pixels over.
-                                image.Source = newFormatedBitmapSource;
-                            }
-                        }
+								//var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
+
+								////  Copy the pixels over.
+								//image.Source = newFormatedBitmapSource;
+							}
+						}
                         break;
                     default:
                         break;
