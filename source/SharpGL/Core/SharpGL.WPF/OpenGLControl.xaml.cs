@@ -79,11 +79,12 @@ namespace SharpGL.WPF
         /// <param name="height">The height of the OpenGL drawing area.</param>
         private void UpdateOpenGLControl(int width, int height)
         {
-            SizeChangedEventArgs e;
+            // SizeChangedEventArgs e;
             // Lock on OpenGL.
             lock (gl)
             {
-                gl.SetDimensions(width, height);
+				gl.MakeCurrent();
+				gl.SetDimensions(width, height);
 
                 //	Set the viewport.
                 gl.Viewport(0, 0, width, height);
