@@ -43,7 +43,10 @@ namespace SharpGL.WPF
 
             //  DispatcherTimer setup
             timer.Tick += new EventHandler(timer_Tick);
-            timer.Start();
+			if (RenderTrigger == RenderTrigger.TimerBased)
+			{
+				timer.Start();
+			}
         }
 
         /// <summary>
@@ -149,6 +152,14 @@ namespace SharpGL.WPF
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void timer_Tick(object sender, EventArgs e)
         {
+			DoRender();
+		}
+
+		/// <summary>
+		/// Executes the GL Render
+		/// </summary>
+		public void DoRender()
+		{
             //  Lock on OpenGL.
             lock (gl)
             {
@@ -386,12 +397,38 @@ namespace SharpGL.WPF
         {
             get { return (bool)GetValue(DrawFPSProperty); }
             set { SetValue(DrawFPSProperty, value); }
-        }
+		}
 
-        /// <summary>
-        /// Gets the OpenGL instance.
-        /// </summary>
-        public OpenGL OpenGL
+		/// <summary>
+		/// The Render trigger of this control
+		/// </summary>
+		public static readonly DependencyProperty RenderTriggerProperty = 
+			DependencyProperty.Register("RenderMode", typeof(RenderTrigger), typeof(OpenGLControl), new PropertyMetadata(RenderTrigger.TimerBased));
+
+		/// <summary>
+		/// Gets or sets the Render trigger of this control
+		/// </summary>
+		public RenderTrigger RenderTrigger
+		{
+			get { return (RenderTrigger)GetValue(RenderTriggerProperty); }
+			set
+			{
+				SetValue(RenderTriggerProperty, value);
+				if (value == RenderTrigger.TimerBased)
+				{
+					timer.Start();
+				}
+				else
+				{
+					timer.Stop();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the OpenGL instance.
+		/// </summary>
+		public OpenGL OpenGL
         {
             get { return gl; }
         }
