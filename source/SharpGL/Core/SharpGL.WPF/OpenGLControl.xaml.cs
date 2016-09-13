@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Windows.Interop;
 using SharpGL.RenderContextProviders;
 using SharpGL.SceneGraph;
 using SharpGL.Version;
@@ -124,11 +125,19 @@ namespace SharpGL.WPF
             //  Call the base.
             base.OnApplyTemplate();
 
-            //  Lock on OpenGL.
-            lock (gl)
+			object windowHandle = null;
+
+			//  Pass handle to window if RenderContextType is NativeWindow (better performance)
+			if (this.RenderContextType == SharpGL.RenderContextType.NativeWindow)
+			{
+				windowHandle = ((HwndSource)HwndSource.FromVisual(this)).Handle;
+			}
+
+			//  Lock on OpenGL.
+			lock (gl)
             {
                 //  Create OpenGL.
-                gl.Create(OpenGLVersion, RenderContextType, 1, 1, 32, null);
+                gl.Create(OpenGLVersion, RenderContextType, 1, 1, 32, windowHandle);
 
 				// JWH - FOR NEW RENDER METHOD
 				// Force re-set of dpi and format settings
