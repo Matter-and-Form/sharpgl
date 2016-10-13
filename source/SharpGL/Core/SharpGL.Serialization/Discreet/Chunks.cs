@@ -45,22 +45,22 @@ namespace SharpGL.Serialization.Discreet
     {
         public virtual void Read(BinaryReader stream)
         {
-            //	Read the data.
+            //    Read the data.
             type = (ChunkType)stream.ReadInt16();
             allDataBytes = stream.ReadInt32();
-            dataBytes = allDataBytes - 6; //	data - header
+            dataBytes = allDataBytes - 6; //    data - header
         }
 
         public static MAXChunkHeader Peep(BinaryReader stream)
         {
-            //	Read a header.
+            //    Read a header.
             MAXChunkHeader header = new MAXChunkHeader();
             header.Read(stream);
 
-            //	Go back.
+            //    Go back.
             stream.BaseStream.Seek(-6, System.IO.SeekOrigin.Current);
 
-            //	Return the header.
+            //    Return the header.
             return header;
         }
 
@@ -73,19 +73,19 @@ namespace SharpGL.Serialization.Discreet
     {
         public virtual void Read(Scene scene, BinaryReader stream)
         {
-            //	Set the start position.
+            //    Set the start position.
             startPosition = stream.BaseStream.Position;
 
-            //	Read the header.
+            //    Read the header.
             ReadHeader(stream);
 
-            //	Read the data itself.
+            //    Read the data itself.
             ReadData(scene, stream);
         }
 
         protected virtual void ReadHeader(BinaryReader stream)
         {
-            //	Read the chunk header.
+            //    Read the chunk header.
             chunkHeader.Read(stream);
         }
 
@@ -96,9 +96,9 @@ namespace SharpGL.Serialization.Discreet
         /// <param name="scene">The scene to put data into.</param>
         public virtual void ReadData(Scene scene, BinaryReader stream)
         {
-            //	This is the code that is executed when an unknown chunk is read.
+            //    This is the code that is executed when an unknown chunk is read.
 
-            //	Advance the stream.
+            //    Advance the stream.
             stream.BaseStream.Seek(chunkHeader.dataBytes, System.IO.SeekOrigin.Current);
         }
 
@@ -119,10 +119,10 @@ namespace SharpGL.Serialization.Discreet
         {
             do
             {
-                //	Peep at the next chunk.
+                //    Peep at the next chunk.
                 MAXChunkHeader next = MAXChunkHeader.Peep(stream);
 
-                //	If it's an Object Mesh, we can read that.
+                //    If it's an Object Mesh, we can read that.
                 if (next.type == ChunkType.CHUNK_OBJMESH)
                 {
                     ObjectMeshChunk chunk = new ObjectMeshChunk();
@@ -130,7 +130,7 @@ namespace SharpGL.Serialization.Discreet
                 }
                 else
                 {
-                    //	We don't know what this chunk is, so just read the generic one.
+                    //    We don't know what this chunk is, so just read the generic one.
                     MAXChunk chunk = new MAXChunk();
                     chunk.Read(scene, stream);
                 }
@@ -145,10 +145,10 @@ namespace SharpGL.Serialization.Discreet
         {
             do
             {
-                //	Peep at the next chunk.
+                //    Peep at the next chunk.
                 MAXChunkHeader next = MAXChunkHeader.Peep(stream);
 
-                //	If it's an Object Block, we can read that.
+                //    If it's an Object Block, we can read that.
                 if (next.type == ChunkType.CHUNK_OBJBLOCK)
                 {
                     ObjectBlockChunk chunk = new ObjectBlockChunk();
@@ -156,7 +156,7 @@ namespace SharpGL.Serialization.Discreet
                 }
                 else
                 {
-                    //	We don't know what this chunk is, so just read the generic one.
+                    //    We don't know what this chunk is, so just read the generic one.
                     MAXChunk chunk = new MAXChunk();
                     chunk.Read(scene, stream);
                 }
@@ -171,10 +171,10 @@ namespace SharpGL.Serialization.Discreet
         {
             do
             {
-                //	Peep at the next chunk.
+                //    Peep at the next chunk.
                 MAXChunkHeader next = MAXChunkHeader.Peep(stream);
 
-                //	If it's an Trimesh Block, we can read that.
+                //    If it's an Trimesh Block, we can read that.
                 if (next.type == ChunkType.CHUNK_TRIMESH)
                 {
                     TriangleMeshChunk chunk = new TriangleMeshChunk();
@@ -182,7 +182,7 @@ namespace SharpGL.Serialization.Discreet
                 }
                 else
                 {
-                    //	We don't know what this chunk is, so just read the generic one.
+                    //    We don't know what this chunk is, so just read the generic one.
                     MAXChunk chunk = new MAXChunk();
                     chunk.Read(scene, stream);
                 }
@@ -195,45 +195,45 @@ namespace SharpGL.Serialization.Discreet
     {
         public override void ReadData(Scene scene, BinaryReader stream)
         {
-            //	A triangle mesh is basicly a Polygon, so create it.
+            //    A triangle mesh is basicly a Polygon, so create it.
             Polygon poly = new Polygon();
             Matrix matrix = new Matrix(Matrix.Identity(4));
 
             do
             {
-                //	Peep at the next chunk.
+                //    Peep at the next chunk.
                 MAXChunkHeader next = MAXChunkHeader.Peep(stream);
 
                 if (next.type == ChunkType.CHUNK_VERTLIST)
                 {
-                    //	Read the vertices.
+                    //    Read the vertices.
                     VertexListChunk chunk = new VertexListChunk();
                     chunk.Read(scene, stream);
 
-                    //	Set them into the polygon.
+                    //    Set them into the polygon.
                     poly.Vertices = chunk.vertices;
                 }
                 else if (next.type == ChunkType.CHUNK_FACELIST)
                 {
-                    //	Read the faces.
+                    //    Read the faces.
                     FaceListChunk chunk = new FaceListChunk();
                     chunk.Read(scene, stream);
 
-                    //	Set them into the polygon.
+                    //    Set them into the polygon.
                     poly.Faces = chunk.faces;
                 }
                 else if (next.type == ChunkType.CHUNK_MAPLIST)
                 {
-                    //	Read the uvs.
+                    //    Read the uvs.
                     MapListChunk chunk = new MapListChunk();
                     chunk.Read(scene, stream);
 
-                    //	Set them into the polygon.
+                    //    Set them into the polygon.
                     poly.UVs = chunk.uvs;
                 }
                 else if (next.type == ChunkType.CHUNK_TRMATRIX)
                 {
-                    //	Here we just read the matrix (we'll use it later).
+                    //    Here we just read the matrix (we'll use it later).
                     TrMatrixChunk chunk = new TrMatrixChunk();
                     chunk.Read(scene, stream);
 
@@ -241,18 +241,18 @@ namespace SharpGL.Serialization.Discreet
                 }
                 else
                 {
-                    //	We don't know what this chunk is, so just read the generic one.
+                    //    We don't know what this chunk is, so just read the generic one.
                     MAXChunk chunk = new MAXChunk();
                     chunk.Read(scene, stream);
                 }
 
             } while (MoreChunks(stream));
 
-            //	Now we multiply each vertex by the matrix.
+            //    Now we multiply each vertex by the matrix.
             for (int i = 0; i < poly.Vertices.Count; i++)
                 poly.Vertices[i] *= matrix;
 
-            //	Add the poly to the scene.
+            //    Add the poly to the scene.
             scene.SceneContainer.AddChild(poly);
         }
     }
@@ -261,11 +261,11 @@ namespace SharpGL.Serialization.Discreet
     {
         public override void ReadData(Scene scene, BinaryReader stream)
         {
-            //	Read number of vertices.
+            //    Read number of vertices.
             short vertexCount = 0;
             vertexCount = stream.ReadInt16();
 
-            //	Read each vertex and add it.
+            //    Read each vertex and add it.
             for (short i = 0; i < vertexCount; i++)
             {
                 Vertex v = new Vertex();
@@ -283,14 +283,14 @@ namespace SharpGL.Serialization.Discreet
     {
         public override void ReadData(Scene scene, BinaryReader stream)
         {
-            //	Note: A max face is three indices and
-            //	a flag short.
+            //    Note: A max face is three indices and
+            //    a flag short.
 
-            //	Read number of faces.
+            //    Read number of faces.
             short faceCount = 0;
             faceCount = stream.ReadInt16();
 
-            //	Read each face and add it.
+            //    Read each face and add it.
             for (short i = 0; i < faceCount; i++)
             {
                 Face f = new Face();
@@ -312,11 +312,11 @@ namespace SharpGL.Serialization.Discreet
     {
         public override void ReadData(Scene scene, BinaryReader stream)
         {
-            //	Read number of uvs.
+            //    Read number of uvs.
             short uvCount = 0;
             uvCount = stream.ReadInt16();
 
-            //	Read each uv and add it.
+            //    Read each uv and add it.
             for (short i = 0; i < uvCount; i++)
             {
                 UV uv = new UV();

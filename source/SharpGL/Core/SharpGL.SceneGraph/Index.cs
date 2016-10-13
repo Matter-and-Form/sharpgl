@@ -20,7 +20,7 @@ namespace SharpGL.SceneGraph
         {
 
         }
-        //	Constructors.
+        //    Constructors.
         public Index(Index index) { vertex = index.vertex; uv = index.uv; }
         public Index(int vertex) { this.vertex = vertex; }
         public Index(int vertex, int uv) { this.vertex = vertex; this.uv = uv; }

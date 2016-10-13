@@ -237,14 +237,14 @@ namespace SharpGL.Enumerations
     /// </summary>
     public enum FogMode : uint
     {
-	   	Exp = OpenGL.GL_EXP,
+           Exp = OpenGL.GL_EXP,
 
         /// <summary>
         /// 
         /// </summary>
-		Exp2 = OpenGL.GL_EXP2,
-	}
-	
+        Exp2 = OpenGL.GL_EXP2,
+    }
+    
     /// <summary>
     /// GetMapTarget 
     /// </summary>
@@ -466,7 +466,7 @@ namespace SharpGL.Enumerations
         FeedbackBufferType = OpenGL.GL_FEEDBACK_BUFFER_TYPE,
         SelectionBufferPointer = OpenGL.GL_SELECTION_BUFFER_POINTER,
         SelectionBufferSize = OpenGL.GL_SELECTION_BUFFER_SIZE
-    }	
+    }    
 
     /// <summary>
     /// The Front Face Mode.
@@ -481,10 +481,10 @@ namespace SharpGL.Enumerations
     /// <summary>
     /// The hint mode.
     /// </summary>
-	public enum HintMode : uint
+    public enum HintMode : uint
     {
-		DontCare = OpenGL.GL_DONT_CARE,
-		Fastest = OpenGL.GL_FASTEST,
+        DontCare = OpenGL.GL_DONT_CARE,
+        Fastest = OpenGL.GL_FASTEST,
         /// <summary>
         /// The 
         /// </summary>
@@ -508,7 +508,7 @@ namespace SharpGL.Enumerations
     /// </summary>
     public enum LightName : uint
     {
-		Light0 = OpenGL.GL_LIGHT0  ,
+        Light0 = OpenGL.GL_LIGHT0  ,
         Light1 = OpenGL.GL_LIGHT1,
         Light2 = OpenGL.GL_LIGHT2,
         Light3 = OpenGL.GL_LIGHT3,
@@ -517,7 +517,7 @@ namespace SharpGL.Enumerations
         Light6 = OpenGL.GL_LIGHT6,
         Light7 = OpenGL.GL_LIGHT7  
     }
-	
+    
     /// <summary>
     /// LightParameter
     /// </summary>
@@ -635,7 +635,7 @@ namespace SharpGL.Enumerations
     /// <summary>
     /// ShadingModel
     /// </summary>
-	public enum ShadeModel : uint
+    public enum ShadeModel : uint
     {
         Flat = OpenGL.GL_FLAT,
         Smooth = OpenGL.GL_SMOOTH

@@ -6,13 +6,13 @@ using SharpGL.SceneGraph;
 
 namespace SharpGL.OpenGLAttributes
 {
-	/// <summary>
-	/// This class has all the settings you can edit for fog.
-	/// </summary>
-	[TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
-	[Serializable()]
+    /// <summary>
+    /// This class has all the settings you can edit for fog.
+    /// </summary>
+    [TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
+    [Serializable()]
     public class EnableAttributes : OpenGLAttributeGroup
-	{
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="EnableAttributes"/> class.
         /// </summary>
@@ -386,5 +386,5 @@ namespace SharpGL.OpenGLAttributes
             get { return enableTexture2D; }
             set { enableTexture2D = value; }
         }
-	}
+    }
 }

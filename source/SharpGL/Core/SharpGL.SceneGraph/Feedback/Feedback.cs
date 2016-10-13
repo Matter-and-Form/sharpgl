@@ -21,10 +21,10 @@ namespace SharpGL.SceneGraph.Feedback
         /// </summary>
         public virtual void Begin(OpenGL gl)
         {
-            //	Set the feedback buffer.
+            //    Set the feedback buffer.
             gl.FeedbackBuffer(feedbackBuffer.Length, OpenGL.GL_3D_COLOR_TEXTURE, feedbackBuffer);
 
-            //	Set the rendermode to feedback.
+            //    Set the rendermode to feedback.
             gl.RenderMode(OpenGL.GL_FEEDBACK);
         }
 
@@ -34,10 +34,10 @@ namespace SharpGL.SceneGraph.Feedback
         /// <returns>The feedback array.</returns>
         public virtual float[] End(OpenGL gl)
         {
-            //	End feedback mode.
+            //    End feedback mode.
             int values = gl.RenderMode(OpenGL.GL_RENDER);
 
-            //	Check for buffer size.
+            //    Check for buffer size.
             if (values == -1)
             {
                 System.Windows.Forms.MessageBox.Show("The scene contained too much data! The data buffer has been doubled in size now, please try again.");
@@ -45,7 +45,7 @@ namespace SharpGL.SceneGraph.Feedback
                 return new float[] { -1 };
             }
 
-            //	Parse the data.
+            //    Parse the data.
             ParseData(gl, values);
 
             return feedbackBuffer;

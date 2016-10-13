@@ -7,13 +7,13 @@ using SharpGL.Enumerations;
 
 namespace SharpGL.OpenGLAttributes
 {
-	/// <summary>
-	/// This class has all the settings you can edit for fog.
-	/// </summary>
-	[TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
-	[Serializable()]
+    /// <summary>
+    /// This class has all the settings you can edit for fog.
+    /// </summary>
+    [TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
+    [Serializable()]
     public class StencilBufferAttributes : OpenGLAttributeGroup
-	{
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="StencilBufferAttributes"/> class.
         /// </summary>
@@ -74,9 +74,9 @@ namespace SharpGL.OpenGLAttributes
         /// <value>
         /// The enable stencil test.
         /// </value>
-		[Description("."), Category("Stencil Buffer")]
+        [Description("."), Category("Stencil Buffer")]
         public bool? EnableStencilTest
-		{
+        {
             get { return enableStencilTest; }
             set { enableStencilTest = value; }
         }
@@ -184,5 +184,5 @@ namespace SharpGL.OpenGLAttributes
             get { return operationDepthPass; }
             set { operationDepthPass = value; }
         }
-	}
+    }
 }

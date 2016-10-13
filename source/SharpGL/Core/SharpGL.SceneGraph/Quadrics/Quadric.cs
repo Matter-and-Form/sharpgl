@@ -55,7 +55,7 @@ namespace SharpGL.SceneGraph.Quadrics
         /// <param name="renderMode">The render mode.</param>
         public virtual void Render(OpenGL gl, RenderMode renderMode)
         {
-            //	Set the quadric properties.
+            //    Set the quadric properties.
             gl.QuadricDrawStyle(glQuadric, (uint)drawStyle);
             gl.QuadricOrientation(glQuadric, (int)orientation);
             gl.QuadricNormals(glQuadric, (uint)normals);

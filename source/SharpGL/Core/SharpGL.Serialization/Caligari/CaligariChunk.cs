@@ -18,10 +18,10 @@ namespace SharpGL.Serialization.Caligari
         /// <returns>The object that has been read.</returns>
         public virtual object Read(BinaryReader reader)
         {
-            //	Read the header.
+            //    Read the header.
             header.Read(reader);
 
-            //	Return the data.
+            //    Return the data.
             return ReadData(reader);
         }
 
@@ -41,7 +41,7 @@ namespace SharpGL.Serialization.Caligari
         /// <param name="reader">The Reader to read from.</param>
         protected virtual object ReadData(BinaryReader reader)
         {
-            //	Skip the data, return nothing.
+            //    Skip the data, return nothing.
             data = reader.ReadBytes((int)header.dataBytes);
             return null;
         }

@@ -7,9 +7,9 @@ using SharpGL.Version;
 
 namespace SharpGL
 {
-   	/// <summary>
-	/// This is the basic OpenGL control object, it gives all of the basic OpenGL functionality.
-	/// </summary>
+       /// <summary>
+    /// This is the basic OpenGL control object, it gives all of the basic OpenGL functionality.
+    /// </summary>
     [ToolboxBitmap(typeof(OpenGLControl), "SharpGL.png")]
     public partial class OpenGLControl : UserControl, ISupportInitialize
     {
@@ -110,10 +110,10 @@ namespace SharpGL
             //  Start the stopwatch so that we can time the rendering.
             stopwatch.Restart();
 
-            //	Make sure it's our instance of openSharpGL that's active.
+            //    Make sure it's our instance of openSharpGL that's active.
             OpenGL.MakeCurrent();
 
-            //	If there is a draw handler, then call it.
+            //    If there is a draw handler, then call it.
             DoOpenGLDraw(new RenderEventArgs(graphics));
 
             //  Draw the FPS.
@@ -124,7 +124,7 @@ namespace SharpGL
                 OpenGL.Flush();
             }
 
-            //	Blit our offscreen bitmap.
+            //    Blit our offscreen bitmap.
             var handleDeviceContext = graphics.GetHdc();
             OpenGL.Blit(handleDeviceContext);
             graphics.ReleaseHdc(handleDeviceContext);
@@ -163,10 +163,10 @@ namespace SharpGL
             if (OpenGL.RenderContextProvider == null)
                 return;
 
-            //	Resize the DIB Surface.
+            //    Resize the DIB Surface.
             OpenGL.SetDimensions(Width, Height);
 
-            //	Set the viewport.
+            //    Set the viewport.
             gl.Viewport(0, 0, Width, Height);
 
             //  If we have a project handler, call it...
@@ -277,7 +277,7 @@ namespace SharpGL
         [Description("Called when the control is resized - you can use this to do custom viewport projections."), Category("SharpGL")]
         public event EventHandler Resized;
 
-   	    /// <summary>
+           /// <summary>
         /// The timer used for drawing the control.
         /// </summary>
         private readonly Timer timerDrawing = new Timer();
@@ -318,10 +318,10 @@ namespace SharpGL
         /// <value>
         ///   <c>true</c> if FPS info should be drawn; otherwise, <c>false</c>.
         /// </value>
-   	    [Description("Should the draw time be shown?"), Category("SharpGL")]
-   	    public bool DrawFPS { get; set; }
+           [Description("Should the draw time be shown?"), Category("SharpGL")]
+           public bool DrawFPS { get; set; }
 
-   	    /// <summary>
+           /// <summary>
         /// The framerate, in hertz.
         /// </summary>
         private int frameRate = 20;
@@ -365,11 +365,11 @@ namespace SharpGL
         /// The desired OpenGL version.
         /// </value>
         [Description("The desired OpenGL version for the control."), Category("SharpGL")]
-   	    public OpenGLVersion OpenGLVersion
-   	    {
+           public OpenGLVersion OpenGLVersion
+           {
             get { return openGLVersion; }
             set { openGLVersion = value; }
-   	    }
+           }
 
         /// <summary>
         /// The default desired OpenGL version.

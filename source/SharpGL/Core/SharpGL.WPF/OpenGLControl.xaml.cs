@@ -1,15 +1,15 @@
-﻿using System;
+﻿using SharpGL.RenderContextProviders;
+using SharpGL.SceneGraph;
+using SharpGL.Version;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using System.Windows.Interop;
-using SharpGL.RenderContextProviders;
-using SharpGL.SceneGraph;
-using SharpGL.Version;
 
 namespace SharpGL.WPF
 {
@@ -40,14 +40,14 @@ namespace SharpGL.WPF
         {
             SizeChanged += OpenGLControl_SizeChanged;
 
-            UpdateOpenGLControl((int) RenderSize.Width, (int) RenderSize.Height);
+            UpdateOpenGLControl((int)RenderSize.Width, (int)RenderSize.Height);
 
             //  DispatcherTimer setup
             timer.Tick += new EventHandler(timer_Tick);
-			if (RenderTrigger == RenderTrigger.TimerBased)
-			{
-				timer.Start();
-			}
+            if (RenderTrigger == RenderTrigger.TimerBased)
+            {
+                timer.Start();
+            }
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace SharpGL.WPF
         /// <param name="e">The <see cref="System.Windows.SizeChangedEventArgs"/> Instance containing the event data.</param>
         void OpenGLControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            UpdateOpenGLControl((int) e.NewSize.Width, (int) e.NewSize.Height);
+            UpdateOpenGLControl((int)e.NewSize.Width, (int)e.NewSize.Height);
         }
 
         /// <summary>
@@ -84,10 +84,10 @@ namespace SharpGL.WPF
             // Lock on OpenGL.
             lock (gl)
             {
-				gl.MakeCurrent();
-				gl.SetDimensions(width, height);
+                gl.MakeCurrent();
+                gl.SetDimensions(width, height);
 
-                //	Set the viewport.
+                //    Set the viewport.
                 gl.Viewport(0, 0, width, height);
 
                 //  If we have a project handler, call it...
@@ -103,17 +103,17 @@ namespace SharpGL.WPF
                         gl.LoadIdentity();
 
                         // Calculate The Aspect Ratio Of The Window
-                        gl.Perspective(45.0f, (float) width/(float) height, 0.1f, 100.0f);
+                        gl.Perspective(45.0f, (float)width / (float)height, 0.1f, 100.0f);
 
                         gl.MatrixMode(OpenGL.GL_MODELVIEW);
                         gl.LoadIdentity();
                     }
                 }
 
-				// JWH - FOR NEW RENDER METHOD
-				// Force re-creation of image buffer since size has changed
-				m_imageBuffer = null;
-			}
+                // JWH - FOR NEW RENDER METHOD
+                // Force re-creation of image buffer since size has changed
+                m_imageBuffer = null;
+            }
         }
 
         /// <summary>
@@ -125,24 +125,24 @@ namespace SharpGL.WPF
             //  Call the base.
             base.OnApplyTemplate();
 
-			object windowHandle = null;
+            object windowHandle = null;
 
-			//  Pass handle to window if RenderContextType is NativeWindow (better performance)
-			if (this.RenderContextType == SharpGL.RenderContextType.NativeWindow)
-			{
-				windowHandle = ((HwndSource)HwndSource.FromVisual(this)).Handle;
-			}
+            //  Pass handle to window if RenderContextType is NativeWindow (better performance)
+            if (this.RenderContextType == SharpGL.RenderContextType.NativeWindow)
+            {
+                windowHandle = ((HwndSource)HwndSource.FromVisual(this)).Handle;
+            }
 
-			//  Lock on OpenGL.
-			lock (gl)
+            //  Lock on OpenGL.
+            lock (gl)
             {
                 //  Create OpenGL.
                 gl.Create(OpenGLVersion, RenderContextType, 1, 1, 32, windowHandle);
 
-				// JWH - FOR NEW RENDER METHOD
-				// Force re-set of dpi and format settings
-				m_dpiX = 0;
-			}
+                // JWH - FOR NEW RENDER METHOD
+                // Force re-set of dpi and format settings
+                m_dpiX = 0;
+            }
 
             //  Create our fast event args.
             eventArgsFast = new OpenGLEventArgs(gl);
@@ -163,87 +163,87 @@ namespace SharpGL.WPF
             timer.Interval = new TimeSpan(0, 0, 0, 0, (int)(1000.0 / FrameRate));
         }
 
-		// JWH - Fields to support the WritableBitmap method of rendering the image for display
-		byte[] m_imageBuffer;
-		WriteableBitmap m_writeableBitmap;
-		Int32Rect m_imageRect;
-		int m_imageStride;
-		double m_dpiX = 0;
-		double m_dpiY = 0;
-		PixelFormat m_format = PixelFormats.Bgra32;
-		int m_bytesPerPixel = 32 >> 3;
+        // JWH - Fields to support the WritableBitmap method of rendering the image for display
+        byte[] m_imageBuffer;
+        WriteableBitmap m_writeableBitmap;
+        Int32Rect m_imageRect;
+        int m_imageStride;
+        double m_dpiX = 0;
+        double m_dpiY = 0;
+        PixelFormat m_format = PixelFormats.Bgra32;
+        int m_bytesPerPixel = 32 >> 3;
 
-		/// <summary>
-		/// JWH - FOR NEW RENDER METHOD
-		/// Fill the ImageSource from the provided bits IntPtr, using the provided hBitMap IntPtr
-		/// if needed to determine key data from the bitmap source.
-		/// </summary>
-		/// <param name="bits">An IntPtr to the bits for the bitmap image.  Generally provided from
-		/// DIBSectionRenderContextProvider.DIBSection.Bits or from
-		/// FBORenderContextProvider.InternalDIBSection.Bits.</param>
-		/// <param name="hBitmap">An IntPtr to the HBitmap for the image.  Generally provided from
-		/// DIBSectionRenderContextProvider.DIBSection.HBitmap or from
-		/// FBORenderContextProvider.InternalDIBSection.HBitmap.</param>
-		public void FillImageSource(IntPtr bits, IntPtr hBitmap)
-		{
-			// If DPI hasen't been set, use a call to HBitmapToBitmapSource to fill the info
-			// This should happen only ONCE (near the start of the application)
-			if (m_dpiX == 0)
-			{
-				var bitmapSource = BitmapConversion.HBitmapToBitmapSource(hBitmap);
-				m_dpiX = bitmapSource.DpiX;
-				m_dpiY = bitmapSource.DpiY;
-				m_format = bitmapSource.Format;
-				m_bytesPerPixel = gl.RenderContextProvider.BitDepth >> 3;
-				// FBO render context flips the image vertically, so transform to compensate
-				if (RenderContextType == SharpGL.RenderContextType.FBO)
-				{
-					image.RenderTransform = new ScaleTransform(1.0, -1.0);
-					image.RenderTransformOrigin = new Point(0.0, 0.5);
-				}
-				else
-				{
-					image.RenderTransform = Transform.Identity;
-					image.RenderTransformOrigin = new Point(0.0, 0.0);
-				}
-			}
-
-			// If the image buffer is null, create it
-			// This should happen when the size of the image changes
-			if (m_imageBuffer == null)
-			{
-				int width = gl.RenderContextProvider.Width;
-				int height = gl.RenderContextProvider.Height;
-
-				int imageBufferSize = width * height * m_bytesPerPixel;
-				m_imageBuffer = new byte[imageBufferSize];
-				m_writeableBitmap = new WriteableBitmap(width, height, m_dpiX, m_dpiY, m_format, null);
-				m_imageRect = new Int32Rect(0, 0, width, height);
-				m_imageStride = width * m_bytesPerPixel;
-			}
-
-			// Fill the image buffer from the bits and create the writeable bitmap
-			System.Runtime.InteropServices.Marshal.Copy(bits, m_imageBuffer, 0, m_imageBuffer.Length);
-			m_writeableBitmap.WritePixels(m_imageRect, m_imageBuffer, m_imageStride, 0);
-
-			image.Source = m_writeableBitmap;
-		}
-
-		/// <summary>
-		/// Handles the Tick event of the timer control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-		void timer_Tick(object sender, EventArgs e)
+        /// <summary>
+        /// JWH - FOR NEW RENDER METHOD
+        /// Fill the ImageSource from the provided bits IntPtr, using the provided hBitMap IntPtr
+        /// if needed to determine key data from the bitmap source.
+        /// </summary>
+        /// <param name="bits">An IntPtr to the bits for the bitmap image.  Generally provided from
+        /// DIBSectionRenderContextProvider.DIBSection.Bits or from
+        /// FBORenderContextProvider.InternalDIBSection.Bits.</param>
+        /// <param name="hBitmap">An IntPtr to the HBitmap for the image.  Generally provided from
+        /// DIBSectionRenderContextProvider.DIBSection.HBitmap or from
+        /// FBORenderContextProvider.InternalDIBSection.HBitmap.</param>
+        public void FillImageSource(IntPtr bits, IntPtr hBitmap)
         {
-			DoRender();
-		}
+            // If DPI hasen't been set, use a call to HBitmapToBitmapSource to fill the info
+            // This should happen only ONCE (near the start of the application)
+            if (m_dpiX == 0)
+            {
+                var bitmapSource = BitmapConversion.HBitmapToBitmapSource(hBitmap);
+                m_dpiX = bitmapSource.DpiX;
+                m_dpiY = bitmapSource.DpiY;
+                m_format = bitmapSource.Format;
+                m_bytesPerPixel = gl.RenderContextProvider.BitDepth >> 3;
+                // FBO render context flips the image vertically, so transform to compensate
+                if (RenderContextType == SharpGL.RenderContextType.FBO)
+                {
+                    image.RenderTransform = new ScaleTransform(1.0, -1.0);
+                    image.RenderTransformOrigin = new Point(0.0, 0.5);
+                }
+                else
+                {
+                    image.RenderTransform = Transform.Identity;
+                    image.RenderTransformOrigin = new Point(0.0, 0.0);
+                }
+            }
 
-		/// <summary>
-		/// Executes the GL Render
-		/// </summary>
-		public void DoRender()
-		{
+            // If the image buffer is null, create it
+            // This should happen when the size of the image changes
+            if (m_imageBuffer == null)
+            {
+                int width = gl.RenderContextProvider.Width;
+                int height = gl.RenderContextProvider.Height;
+
+                int imageBufferSize = width * height * m_bytesPerPixel;
+                m_imageBuffer = new byte[imageBufferSize];
+                m_writeableBitmap = new WriteableBitmap(width, height, m_dpiX, m_dpiY, m_format, null);
+                m_imageRect = new Int32Rect(0, 0, width, height);
+                m_imageStride = width * m_bytesPerPixel;
+            }
+
+            // Fill the image buffer from the bits and create the writeable bitmap
+            System.Runtime.InteropServices.Marshal.Copy(bits, m_imageBuffer, 0, m_imageBuffer.Length);
+            m_writeableBitmap.WritePixels(m_imageRect, m_imageBuffer, m_imageStride, 0);
+
+            image.Source = m_writeableBitmap;
+        }
+
+        /// <summary>
+        /// Handles the Tick event of the timer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        void timer_Tick(object sender, EventArgs e)
+        {
+            DoRender();
+        }
+
+        /// <summary>
+        /// Executes the GL Render
+        /// </summary>
+        public void DoRender()
+        {
             //  Lock on OpenGL.
             lock (gl)
             {
@@ -253,7 +253,7 @@ namespace SharpGL.WPF
                 //  Make GL current.
                 gl.MakeCurrent();
 
-                //	If there is a draw handler, then call it.
+                //    If there is a draw handler, then call it.
                 var handler = OpenGLDraw;
                 if (handler != null)
                     handler(this, eventArgsFast);
@@ -263,7 +263,7 @@ namespace SharpGL.WPF
                 //  Draw the FPS.
                 if (DrawFPS)
                 {
-                    gl.DrawText(5, 5, 1.0f, 0.0f, 0.0f, "Courier New", 12.0f,  string.Format("Draw Time: {0:0.0000} ms ~ {1:0.0} FPS", frameTime, 1000.0 / frameTime));
+                    gl.DrawText(5, 5, 1.0f, 0.0f, 0.0f, "Courier New", 12.0f, string.Format("Draw Time: {0:0.0000} ms ~ {1:0.0} FPS", frameTime, 1000.0 / frameTime));
                     gl.Flush();
                 }
 
@@ -279,15 +279,15 @@ namespace SharpGL.WPF
 
                             if (hBitmap != IntPtr.Zero)
                             {
-								// JWH - FOR NEW RENDER METHOD:
-								FillImageSource(provider.DIBSection.Bits, hBitmap);
+                                // JWH - FOR NEW RENDER METHOD:
+                                FillImageSource(provider.DIBSection.Bits, hBitmap);
 
-								//var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
+                                //var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
 
-								////  Copy the pixels over.
-								//image.Source = newFormatedBitmapSource;
-							}
-						}
+                                ////  Copy the pixels over.
+                                //image.Source = newFormatedBitmapSource;
+                            }
+                        }
                         break;
                     case RenderContextType.NativeWindow:
                         break;
@@ -300,16 +300,16 @@ namespace SharpGL.WPF
 
                             if (hBitmap != IntPtr.Zero)
                             {
-								// JWH - FOR NEW RENDER METHOD:
-								// The FBORenderContextProvider flips the image vertically, so transform it
-								FillImageSource(provider.InternalDIBSection.Bits, hBitmap);
+                                // JWH - FOR NEW RENDER METHOD:
+                                // The FBORenderContextProvider flips the image vertically, so transform it
+                                FillImageSource(provider.InternalDIBSection.Bits, hBitmap);
 
-								//var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
+                                //var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
 
-								////  Copy the pixels over.
-								//image.Source = newFormatedBitmapSource;
-							}
-						}
+                                ////  Copy the pixels over.
+                                //image.Source = newFormatedBitmapSource;
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -319,7 +319,7 @@ namespace SharpGL.WPF
                 stopwatch.Stop();
 
                 //  Store the frame time.
-                frameTime = stopwatch.Elapsed.TotalMilliseconds;      
+                frameTime = stopwatch.Elapsed.TotalMilliseconds;
             }
         }
 
@@ -376,7 +376,7 @@ namespace SharpGL.WPF
         /// The OpenGL instance.
         /// </summary>
         private OpenGL gl = new OpenGL();
-        
+
         /// <summary>
         /// The dispatcher timer.
         /// </summary>
@@ -409,7 +409,7 @@ namespace SharpGL.WPF
         /// </summary>
         [Description("Called when the control is resized - you can use this to do custom viewport projections."), Category("SharpGL")]
         public event OpenGLEventHandler Resized;
-        
+
         /// <summary>
         /// The frame rate dependency property.
         /// </summary>
@@ -488,38 +488,38 @@ namespace SharpGL.WPF
         {
             get { return (bool)GetValue(DrawFPSProperty); }
             set { SetValue(DrawFPSProperty, value); }
-		}
+        }
 
-		/// <summary>
-		/// The Render trigger of this control
-		/// </summary>
-		public static readonly DependencyProperty RenderTriggerProperty = 
-			DependencyProperty.Register("RenderMode", typeof(RenderTrigger), typeof(OpenGLControl), new PropertyMetadata(RenderTrigger.TimerBased));
+        /// <summary>
+        /// The Render trigger of this control
+        /// </summary>
+        public static readonly DependencyProperty RenderTriggerProperty =
+            DependencyProperty.Register("RenderMode", typeof(RenderTrigger), typeof(OpenGLControl), new PropertyMetadata(RenderTrigger.TimerBased));
 
-		/// <summary>
-		/// Gets or sets the Render trigger of this control
-		/// </summary>
-		public RenderTrigger RenderTrigger
-		{
-			get { return (RenderTrigger)GetValue(RenderTriggerProperty); }
-			set
-			{
-				SetValue(RenderTriggerProperty, value);
-				if (value == RenderTrigger.TimerBased)
-				{
-					timer.Start();
-				}
-				else
-				{
-					timer.Stop();
-				}
-			}
-		}
+        /// <summary>
+        /// Gets or sets the Render trigger of this control
+        /// </summary>
+        public RenderTrigger RenderTrigger
+        {
+            get { return (RenderTrigger)GetValue(RenderTriggerProperty); }
+            set
+            {
+                SetValue(RenderTriggerProperty, value);
+                if (value == RenderTrigger.TimerBased)
+                {
+                    timer.Start();
+                }
+                else
+                {
+                    timer.Stop();
+                }
+            }
+        }
 
-		/// <summary>
-		/// Gets the OpenGL instance.
-		/// </summary>
-		public OpenGL OpenGL
+        /// <summary>
+        /// Gets the OpenGL instance.
+        /// </summary>
+        public OpenGL OpenGL
         {
             get { return gl; }
         }

@@ -16,7 +16,7 @@ namespace SharpGL.SceneGraph.Helpers
         /// <param name="gl">The OpenGL instance.</param>
         public static void InitialiseHighQuality(OpenGL gl)
         {
-            //	Set parameters that give us some high quality settings.
+            //    Set parameters that give us some high quality settings.
             gl.Enable(OpenGL.GL_DEPTH_TEST);
             gl.Enable(OpenGL.GL_NORMALIZE);
             gl.Enable(OpenGL.GL_LIGHTING);

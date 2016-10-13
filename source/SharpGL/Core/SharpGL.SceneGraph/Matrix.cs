@@ -1208,7 +1208,7 @@ namespace SharpGL.SceneGraph
         /// Returns the LU Decomposition of a matrix. 
         /// the output is: lower triangular matrix L, upper
         /// triangular matrix U, and permutation matrix P so that
-        ///	P*X = L*U.
+        ///    P*X = L*U.
         /// In case of an error the error is raised as an exception.
         /// Note: This method is based on the 'LU Decomposition and Its Applications'
         /// section of Numerical Recipes in C by William H. Press,
@@ -1345,7 +1345,7 @@ namespace SharpGL.SceneGraph
         /// Returns the LU Decomposition of a matrix. 
         /// the output is: lower triangular matrix L, upper
         /// triangular matrix U, and permutation matrix P so that
-        ///	P*X = L*U.
+        ///    P*X = L*U.
         /// In case of an error the error is raised as an exception. 
         /// Note: This method is based on the 'LU Decomposition and Its Applications'
         /// section of Numerical Recipes in C by William H. Press,

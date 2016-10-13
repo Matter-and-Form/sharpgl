@@ -23,20 +23,20 @@ namespace SharpGL.SceneGraph.Feedback
         /// </returns>
         public Polygon CreatePolygon(OpenGL gl, IRenderable sourceObject, Camera guarenteedView)
         {
-            //	Save the current camera data.
+            //    Save the current camera data.
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();
 
-            //	Look through the camera that can see the object.
+            //    Look through the camera that can see the object.
             guarenteedView.Project(gl);
 
-            //	Start triangulation.
+            //    Start triangulation.
             Begin(gl);
 
-            //	Draw the object.
+            //    Draw the object.
             sourceObject.Render(gl, RenderMode.Design);
 
-            //	End triangulation.
+            //    End triangulation.
             End(gl);
 
             Polygon newPoly = Triangle;

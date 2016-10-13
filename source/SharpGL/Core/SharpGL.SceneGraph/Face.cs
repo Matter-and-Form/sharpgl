@@ -32,7 +32,7 @@ namespace SharpGL.SceneGraph
         /// <returns>An array of four coefficients a,b,c,d.</returns>
         public float[] GetPlaneEquation(Polygon parent)
         {
-            //	Get refs to vertices.
+            //    Get refs to vertices.
             Vertex v1 = parent.Vertices[indices[0].Vertex];
             Vertex v2 = parent.Vertices[indices[1].Vertex];
             Vertex v3 = parent.Vertices[indices[2].Vertex];
@@ -54,7 +54,7 @@ namespace SharpGL.SceneGraph
         /// <returns></returns>
         public Vertex GetSurfaceNormal(Polygon parent)
         {
-            //	Do we have enough vertices for a normal?
+            //    Do we have enough vertices for a normal?
             if (indices.Count < 3)
                 return new Vertex(0, 0, 0);
 
@@ -73,17 +73,17 @@ namespace SharpGL.SceneGraph
         /// <param name="parent">The parent polygon.</param>
         public void Reorder(Polygon parent)
         {
-            //	Create a new index collection.
+            //    Create a new index collection.
             List<Index> newIndices = new List<Index>();
 
-            //	Go through every old index and add it.
+            //    Go through every old index and add it.
             for (int i = 0; i < indices.Count; i++)
                 newIndices.Add(indices[indices.Count - (i + 1)]);
 
-            //	Set the new index array.
+            //    Set the new index array.
             indices = newIndices;
 
-            //	Recreate each normal.
+            //    Recreate each normal.
             GenerateNormals(parent);
         }
 
@@ -97,14 +97,14 @@ namespace SharpGL.SceneGraph
             {
                 foreach (Index index in Indices)
                 {
-                    //	Do we have enough vertices for a normal?
+                    //    Do we have enough vertices for a normal?
                     if (Indices.Count >= 3)
                     {
-                        //	Create a normal.
+                        //    Create a normal.
                         Vertex vNormal = GetSurfaceNormal(parent);
                         vNormal.UnitLength();
 
-                        //	Add it to the normals, setting the index for next time.
+                        //    Add it to the normals, setting the index for next time.
                         if (index.Normal != -1)
                             parent.Normals.RemoveAt(index.Normal);
                         index.Normal = parent.Normals.Count;

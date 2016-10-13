@@ -27,8 +27,8 @@ namespace SharpGL.SceneGraph
         /// </returns>
         public float ClassifyPoint(Vertex point)
         {
-            //	(X-P)*N = 0. Where, X is a point to test, P is a point
-            //	on the plane, and N is the normal to the plane.
+            //    (X-P)*N = 0. Where, X is a point to test, P is a point
+            //    on the plane, and N is the normal to the plane.
 
             return normal.ScalarProduct(point);
         }

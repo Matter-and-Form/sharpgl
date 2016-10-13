@@ -34,7 +34,7 @@ namespace SharpGL.SceneGraph.Quadrics
             //  Call the base.
             base.Render(gl, renderMode);
 
-            //	Draw a quadric with the current settings.
+            //    Draw a quadric with the current settings.
             gl.Cylinder(glQuadric, baseRadius, topRadius, height, slices, stacks);
         }
 

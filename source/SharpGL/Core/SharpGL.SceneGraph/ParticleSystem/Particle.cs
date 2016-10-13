@@ -68,22 +68,22 @@ namespace SharpGL.SceneGraph.ParticleSystems
         /// <param name="rand">A random object.</param>
         public override void Tick(System.Random rand)
         {
-            //	Randomise the direction.
+            //    Randomise the direction.
             direction.X = directionRandomise.X - (2 * (float)rand.NextDouble() * directionRandomise.X);
             direction.Y = directionRandomise.Y - (2 * (float)rand.NextDouble() * directionRandomise.Y);
             direction.Z = directionRandomise.Z - (2 * (float)rand.NextDouble() * directionRandomise.Z);
 
-            //	Now we randomise the color.
+            //    Now we randomise the color.
             color.R += colorRandomise.R - (2 * (float)rand.NextDouble() * colorRandomise.R);
             color.G += colorRandomise.G - (2 * (float)rand.NextDouble() * colorRandomise.G);
             color.B += colorRandomise.B - (2 * (float)rand.NextDouble() * colorRandomise.B);
             color.A += colorRandomise.A - (2 * (float)rand.NextDouble() * colorRandomise.A);
 
-            //	First we update the velocity.
+            //    First we update the velocity.
             velocity += direction;
             velocity += gravity;
 
-            //	Now we move the particle.
+            //    Now we move the particle.
             position += velocity;
             life -= lifespan;
         }
@@ -109,7 +109,7 @@ namespace SharpGL.SceneGraph.ParticleSystems
         protected Vertex position = new Vertex(0, 0, 0);
 
         /// <summary>
-        ///	This is the velocity, do not modify!
+        ///    This is the velocity, do not modify!
         /// </summary>
         protected Vertex velocity = new Vertex(0, 0, 0);
 
@@ -229,11 +229,11 @@ namespace SharpGL.SceneGraph.ParticleSystems
         /// <param name="gl">The gl.</param>
         public override void Draw(OpenGL gl)
         {
-            //	Create the sphere if need be.
+            //    Create the sphere if need be.
             if (sphere == null)
                 sphere = new Quadrics.Sphere();
 
-            //	Set the properties.
+            //    Set the properties.
             sphere.Transformation.TranslateX = position.X;
             sphere.Transformation.TranslateY = position.Y;
             sphere.Transformation.TranslateZ = position.Z;

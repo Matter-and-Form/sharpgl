@@ -34,14 +34,14 @@ namespace SharpGL.SceneGraph
         /// </returns>
         public static Vertex Project(this OpenGL gl, Vertex vertex)
         {
-            //	THIS CODE MUST BE TESTED
+            //    THIS CODE MUST BE TESTED
             double[] modelview = new double[16];
             double[] projection = new double[16];
             int[] viewport = new int[4];
             gl.GetDouble(OpenGL.GL_MODELVIEW_MATRIX, modelview);
             gl.GetDouble(OpenGL.GL_PROJECTION_MATRIX, projection);
             gl.GetInteger(OpenGL.GL_VIEWPORT, viewport);
-            double[] x = new double[1];	//	kludgy
+            double[] x = new double[1];    //    kludgy
             double[] y = new double[1];
             double[] z = new double[1];
             gl.Project(vertex.X, vertex.Y, vertex.Z,

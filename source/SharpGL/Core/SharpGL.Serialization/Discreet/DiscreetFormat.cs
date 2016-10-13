@@ -9,34 +9,34 @@ using System.ComponentModel.Composition;
 namespace SharpGL.Serialization.Discreet
 {
     [Export(typeof(IFileFormat))]
-	public class Discreet3dsFormat : IFileFormat
-	{
+    public class Discreet3dsFormat : IFileFormat
+    {
         /*
-		protected override object LoadData(Stream stream)
-		{
-			
-		}
+        protected override object LoadData(Stream stream)
+        {
+            
+        }
 
-		protected override bool SaveData(object data, Stream stream)
-		{
-			//	Haven't yet created this code.
-			return false;
-		}
+        protected override bool SaveData(object data, Stream stream)
+        {
+            //    Haven't yet created this code.
+            return false;
+        }
 
-		public override string[] FileTypes
-		{
-			
-		}
+        public override string[] FileTypes
+        {
+            
+        }
 
-		public override string Filter
-		{
-			
-		}
+        public override string Filter
+        {
+            
+        }
 
-		public override Type[] DataTypes
-		{
-			get {return new Type[] {typeof(Scene)};}
-		}*/
+        public override Type[] DataTypes
+        {
+            get {return new Type[] {typeof(Scene)};}
+        }*/
         public Scene LoadData(string path)
         {
             //  Create a null scene.
@@ -47,14 +47,14 @@ namespace SharpGL.Serialization.Discreet
             {
                 using (var reader = new BinaryReader(fileStream, System.Text.Encoding.ASCII))
                 {
-                    //	Create a new scene to load to.
+                    //    Create a new scene to load to.
                     scene = new Scene();
 
-                    //	Peep the first chunk to make sure it's a 'main' chunk.
+                    //    Peep the first chunk to make sure it's a 'main' chunk.
                     if (MAXChunkHeader.Peep(reader).type != ChunkType.CHUNK_MAIN)
                         return null;
 
-                    //	The first chunk is always the main chunk, so read it.
+                    //    The first chunk is always the main chunk, so read it.
                     MainChunk main = new MainChunk();
                     main.Read(scene, reader);
                 }

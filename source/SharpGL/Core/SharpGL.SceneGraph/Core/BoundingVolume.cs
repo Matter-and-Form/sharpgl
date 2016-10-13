@@ -8,14 +8,14 @@ using SharpGL.Enumerations;
 
 namespace SharpGL.SceneGraph.Core
 {
-	public class BoundingVolume : IRenderable
-	{
+    public class BoundingVolume : IRenderable
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="BoundingVolume"/> class.
         /// </summary>
         public BoundingVolume() 
-		{
-		}
+        {
+        }
 
         /// <summary>
         /// Creates the volume from vertices.
@@ -185,32 +185,32 @@ namespace SharpGL.SceneGraph.Core
             gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, 
                 renderMode == RenderMode.HitTest ? (uint)PolygonMode.Filled : (uint)PolygonMode.Lines);
             
-            gl.Begin(OpenGL.GL_QUADS);		// Draw The Cube Using quads
-            gl.Vertex(hhl);	// Top Right Of The Quad (Top)
-            gl.Vertex(lhl);	// Top Left Of The Quad (Top)
-            gl.Vertex(lhh);	// Bottom Left Of The Quad (Top)
-            gl.Vertex(hhh);	// Bottom Right Of The Quad (Top)
-            gl.Vertex(hlh);	// Top Right Of The Quad (Bottom)
-            gl.Vertex(llh);	// Top Left Of The Quad (Bottom)
-            gl.Vertex(lll);	// Bottom Left Of The Quad (Bottom)
-            gl.Vertex(hll);	// Bottom Right Of The Quad (Bottom)
-            gl.Vertex(hhh);	// Top Right Of The Quad (Front)
-            gl.Vertex(lhh);	// Top Left Of The Quad (Front)
-            gl.Vertex(llh);	// Bottom Left Of The Quad (Front)
-            gl.Vertex(hlh);	// Bottom Right Of The Quad (Front)
-            gl.Vertex(hll);	// Top Right Of The Quad (Back)
-            gl.Vertex(lll);	// Top Left Of The Quad (Back)
-            gl.Vertex(lhl);	// Bottom Left Of The Quad (Back)
-            gl.Vertex(hhl);	// Bottom Right Of The Quad (Back)
-            gl.Vertex(lhh);	// Top Right Of The Quad (Left)
-            gl.Vertex(lhl);	// Top Left Of The Quad (Left)
-            gl.Vertex(lll);	// Bottom Left Of The Quad (Left)
-            gl.Vertex(llh);	// Bottom Right Of The Quad (Left)
-            gl.Vertex(hhl);	// Top Right Of The Quad (Right)
-            gl.Vertex(hhh);	// Top Left Of The Quad (Right)
-            gl.Vertex(hlh);	// Bottom Left Of The Quad (Right)
-            gl.Vertex(hll);	// Bottom Right Of The Quad (Right)
-            gl.End();			// End Drawing The Cube
+            gl.Begin(OpenGL.GL_QUADS);        // Draw The Cube Using quads
+            gl.Vertex(hhl);    // Top Right Of The Quad (Top)
+            gl.Vertex(lhl);    // Top Left Of The Quad (Top)
+            gl.Vertex(lhh);    // Bottom Left Of The Quad (Top)
+            gl.Vertex(hhh);    // Bottom Right Of The Quad (Top)
+            gl.Vertex(hlh);    // Top Right Of The Quad (Bottom)
+            gl.Vertex(llh);    // Top Left Of The Quad (Bottom)
+            gl.Vertex(lll);    // Bottom Left Of The Quad (Bottom)
+            gl.Vertex(hll);    // Bottom Right Of The Quad (Bottom)
+            gl.Vertex(hhh);    // Top Right Of The Quad (Front)
+            gl.Vertex(lhh);    // Top Left Of The Quad (Front)
+            gl.Vertex(llh);    // Bottom Left Of The Quad (Front)
+            gl.Vertex(hlh);    // Bottom Right Of The Quad (Front)
+            gl.Vertex(hll);    // Top Right Of The Quad (Back)
+            gl.Vertex(lll);    // Top Left Of The Quad (Back)
+            gl.Vertex(lhl);    // Bottom Left Of The Quad (Back)
+            gl.Vertex(hhl);    // Bottom Right Of The Quad (Back)
+            gl.Vertex(lhh);    // Top Right Of The Quad (Left)
+            gl.Vertex(lhl);    // Top Left Of The Quad (Left)
+            gl.Vertex(lll);    // Bottom Left Of The Quad (Left)
+            gl.Vertex(llh);    // Bottom Right Of The Quad (Left)
+            gl.Vertex(hhl);    // Top Right Of The Quad (Right)
+            gl.Vertex(hhh);    // Top Left Of The Quad (Right)
+            gl.Vertex(hlh);    // Bottom Left Of The Quad (Right)
+            gl.Vertex(hll);    // Bottom Right Of The Quad (Right)
+            gl.End();            // End Drawing The Cube
 
             //  Pop attributes.
             gl.PopAttrib();

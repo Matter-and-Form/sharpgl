@@ -104,7 +104,7 @@ namespace SharpGL.Serialization.Wavefront
                             line.StartsWith("map_Kd") ||
                             line.StartsWith("map_Ks"))
                         {
-                            // Get texture map.                    		
+                            // Get texture map.                            
                             string textureFile = ReadMaterialValue(line);
 
                             // Check for existing textures.  Create if does not exist.
@@ -136,7 +136,7 @@ namespace SharpGL.Serialization.Wavefront
                             alpha = Convert.ToSingle(ReadMaterialValue(line));
                             SetAlphaForMaterial(mtl, alpha);
                         }
-                        // TODO: Handle illumination mode (illum)                    	                    
+                        // TODO: Handle illumination mode (illum)                                            
                     }
                 }
 
@@ -276,114 +276,114 @@ namespace SharpGL.Serialization.Wavefront
 
         //        private void WriteSceneElement(StreamWriter writer, SceneElement element, ref string currentObjectName, ref string currentMaterialName)
         //        {
-        //        	// If object name different than for last element processed, write a g(roup) statement.
-        //        	if (!String.IsNullOrWhiteSpace(element.Name))
-        //        		if (element.Name != currentObjectName)
-        //	        	{
-        //        			currentObjectName = element.Name;
-        //        			writer.WriteLine("g {0}", currentObjectName);        			
-        //	        	}
-        //        	
-        //        	// If material name different than for last element processed, write a usemtl statement.
-        //        	if (element is IHasMaterial)
-        //        	{
-        //        		IHasMaterial hasMaterial = element as IHasMaterial;
-        //        		if (hasMaterial.Material != null)
-        //        		if (!String.IsNullOrWhiteSpace(hasMaterial.Material.Name))
-        //        			if (hasMaterial.Material.Name != currentMaterialName)
-        //    				{
-        //        				currentMaterialName = hasMaterial.Material.Name;
-        //        				writer.WriteLine("usemtl {0}", currentMaterialName);
-        //        			}
-        //        	}
-        //        	
-        //        	// Write out this element.
-        //        	if (element is Polygon)
-        //        	{
-        //        		Polygon poly = element as Polygon;
-        //        		foreach (Face face in poly.Faces)
-        //        		{
-        //		        	// If material name different than for last face processed, write a usemtl statement.
-        //		        	if (face.Material != null)
-        //		        		if (!String.IsNullOrWhiteSpace(face.Material.Name))
-        //		        			if (face.Material.Name != currentMaterialName)
-        //		    				{
-        //		        				currentMaterialName = face.Material.Name;
-        //		        				writer.WriteLine("usemtl {0}", currentMaterialName);
-        //		        			}
-        //        			
-        //		        	// Write out the vertices.
-        //		        	foreach (Index i in face.Indices)
-        //		        	{
-        //		        		Vertex v = poly.Vertices[i.Vertex];
-        //		        		writer.WriteLine("v {0} {1} {2}", v.X, v.Y, v.Z);
-        //		        	}
-        //        		}
-        //        	}
-        //			// TODO: Handle shapes other than polygons.
-        //        	
-        //        	
-        //        	// Write out any child elements.
-        //        	foreach (SceneElement child in element.Children)
-        //        		WriteSceneElement(writer, child, ref currentObjectName, ref currentMaterialName);
+        //            // If object name different than for last element processed, write a g(roup) statement.
+        //            if (!String.IsNullOrWhiteSpace(element.Name))
+        //                if (element.Name != currentObjectName)
+        //                {
+        //                    currentObjectName = element.Name;
+        //                    writer.WriteLine("g {0}", currentObjectName);                    
+        //                }
+        //            
+        //            // If material name different than for last element processed, write a usemtl statement.
+        //            if (element is IHasMaterial)
+        //            {
+        //                IHasMaterial hasMaterial = element as IHasMaterial;
+        //                if (hasMaterial.Material != null)
+        //                if (!String.IsNullOrWhiteSpace(hasMaterial.Material.Name))
+        //                    if (hasMaterial.Material.Name != currentMaterialName)
+        //                    {
+        //                        currentMaterialName = hasMaterial.Material.Name;
+        //                        writer.WriteLine("usemtl {0}", currentMaterialName);
+        //                    }
+        //            }
+        //            
+        //            // Write out this element.
+        //            if (element is Polygon)
+        //            {
+        //                Polygon poly = element as Polygon;
+        //                foreach (Face face in poly.Faces)
+        //                {
+        //                    // If material name different than for last face processed, write a usemtl statement.
+        //                    if (face.Material != null)
+        //                        if (!String.IsNullOrWhiteSpace(face.Material.Name))
+        //                            if (face.Material.Name != currentMaterialName)
+        //                            {
+        //                                currentMaterialName = face.Material.Name;
+        //                                writer.WriteLine("usemtl {0}", currentMaterialName);
+        //                            }
+        //                    
+        //                    // Write out the vertices.
+        //                    foreach (Index i in face.Indices)
+        //                    {
+        //                        Vertex v = poly.Vertices[i.Vertex];
+        //                        writer.WriteLine("v {0} {1} {2}", v.X, v.Y, v.Z);
+        //                    }
+        //                }
+        //            }
+        //            // TODO: Handle shapes other than polygons.
+        //            
+        //            
+        //            // Write out any child elements.
+        //            foreach (SceneElement child in element.Children)
+        //                WriteSceneElement(writer, child, ref currentObjectName, ref currentMaterialName);
         //
-        //        	writer.WriteLine();
+        //            writer.WriteLine();
         //        }
         //
         //        public bool SaveData(Scene scene, SceneElement element, string path)
         //        {
-        //        	string mtlPath = Path.ChangeExtension(path, ".mtl");
-        //        	string shortMtlPath = Path.GetFileName(mtlPath);
-        //        	SaveMaterials(mtlPath, scene);
-        //        	using (StreamWriter writer = new StreamWriter(path))
-        //        	{
-        //        		writer.WriteLine("mtlib {0}", shortMtlPath);
-        //        		string objName = "";
-        //        		string mtlName = "";
-        //        		WriteSceneElement(writer, element, ref objName, ref mtlName);
-        //	        	writer.Flush();
-        //	        	writer.Close();
-        //        	}        	
-        //        	return true;        	
+        //            string mtlPath = Path.ChangeExtension(path, ".mtl");
+        //            string shortMtlPath = Path.GetFileName(mtlPath);
+        //            SaveMaterials(mtlPath, scene);
+        //            using (StreamWriter writer = new StreamWriter(path))
+        //            {
+        //                writer.WriteLine("mtlib {0}", shortMtlPath);
+        //                string objName = "";
+        //                string mtlName = "";
+        //                WriteSceneElement(writer, element, ref objName, ref mtlName);
+        //                writer.Flush();
+        //                writer.Close();
+        //            }            
+        //            return true;            
         //        }
         //
         //        
         //        private void WriteMaterialColor(StreamWriter writer, string name, System.Drawing.Color color)
         //        {
-        //        	float r = Convert.ToSingle(color.R) / 255F;
-        //        	float g = Convert.ToSingle(color.G) / 255F;
-        //        	float b = Convert.ToSingle(color.B) / 255F;
-        //        	writer.WriteLine("{0} {1} {2} {3}", name, r, g, b);        	
+        //            float r = Convert.ToSingle(color.R) / 255F;
+        //            float g = Convert.ToSingle(color.G) / 255F;
+        //            float b = Convert.ToSingle(color.B) / 255F;
+        //            writer.WriteLine("{0} {1} {2} {3}", name, r, g, b);            
         //        }
         //
         //                
         //        private void WriteMaterialValue(StreamWriter writer, string name, string value)
         //        {
-        //        	writer.WriteLine("{0} {1}", name, value);        	
+        //            writer.WriteLine("{0} {1}", name, value);            
         //        }
         //        
         //        private void SaveMaterials(string path, Scene scene)
         //        {
-        //        	using (StreamWriter writer = new StreamWriter(path))
-        //        	{
-        //	        	foreach (Material mtl in scene.Assets)
-        //	        	{
-        //	        		if (mtl == null) continue;
-        //	        		
-        //	        		writer.WriteLine("newmtl {0}", mtl.Name);
-        //	        		WriteMaterialColor(writer, "Ka", mtl.Ambient);
-        //	        		WriteMaterialColor(writer, "Kd", mtl.Diffuse);
-        //	        		WriteMaterialColor(writer, "Ks", mtl.Specular);
-        //					// TODO: Shininess	        		
-        //	        		WriteMaterialValue(writer, "Tr", (Convert.ToSingle(mtl.Diffuse.A) / 255).ToString());
-        //	        		// TODO: Illumination model
-        //	        		// TODO: Textures
-        //	        		
-        //	        		writer.WriteLine();
-        //	        	}
-        //	        	writer.Flush();
-        //	        	writer.Close();
-        //        	}
+        //            using (StreamWriter writer = new StreamWriter(path))
+        //            {
+        //                foreach (Material mtl in scene.Assets)
+        //                {
+        //                    if (mtl == null) continue;
+        //                    
+        //                    writer.WriteLine("newmtl {0}", mtl.Name);
+        //                    WriteMaterialColor(writer, "Ka", mtl.Ambient);
+        //                    WriteMaterialColor(writer, "Kd", mtl.Diffuse);
+        //                    WriteMaterialColor(writer, "Ks", mtl.Specular);
+        //                    // TODO: Shininess                    
+        //                    WriteMaterialValue(writer, "Tr", (Convert.ToSingle(mtl.Diffuse.A) / 255).ToString());
+        //                    // TODO: Illumination model
+        //                    // TODO: Textures
+        //                    
+        //                    writer.WriteLine();
+        //                }
+        //                writer.Flush();
+        //                writer.Close();
+        //            }
         //        }
 
         public string[] FileTypes

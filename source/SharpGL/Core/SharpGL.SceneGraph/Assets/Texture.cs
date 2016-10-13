@@ -8,15 +8,15 @@ using System.Runtime.InteropServices;
 
 namespace SharpGL.SceneGraph.Assets
 {
-	/// <summary>
-	/// A Texture object is simply an array of bytes. It has OpenGL functions, but is
-	/// not limited to OpenGL, so DirectX or custom library functions could be later added.
-	/// </summary>
-	[Editor(typeof(NETDesignSurface.Editors.UITextureEditor), typeof(UITypeEditor))]
-	[TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
-	[Serializable()]
-	public class Texture : Asset, IBindable
-	{
+    /// <summary>
+    /// A Texture object is simply an array of bytes. It has OpenGL functions, but is
+    /// not limited to OpenGL, so DirectX or custom library functions could be later added.
+    /// </summary>
+    [Editor(typeof(NETDesignSurface.Editors.UITextureEditor), typeof(UITypeEditor))]
+    [TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
+    [Serializable()]
+    public class Texture : Asset, IBindable
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture"/> class.
         /// </summary>
@@ -57,7 +57,7 @@ namespace SharpGL.SceneGraph.Assets
         /// <param name="gl">The OpenGL instance.</param>
         public void Bind(OpenGL gl)
         {
-            //	Bind our texture object (make it the current texture).
+            //    Bind our texture object (make it the current texture).
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, TextureName);
         }
         
@@ -88,12 +88,12 @@ namespace SharpGL.SceneGraph.Assets
             //  Create the underlying OpenGL object.
             Create(gl);
 
-            //	Get the maximum texture size supported by OpenGL.
+            //    Get the maximum texture size supported by OpenGL.
             int[] textureMaxSize = { 0 };
             gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE, textureMaxSize);
 
-            //	Find the target width and height sizes, which is just the highest
-            //	posible power of two that'll fit into the image.
+            //    Find the target width and height sizes, which is just the highest
+            //    posible power of two that'll fit into the image.
             int targetWidth = textureMaxSize[0];
             int targetHeight = textureMaxSize[0];
 
@@ -135,11 +135,11 @@ namespace SharpGL.SceneGraph.Assets
             BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
                 ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
-            //	Set the width and height.
+            //    Set the width and height.
             width = image.Width;
             height = image.Height;
 
-            //	Bind our texture object (make it the current texture).
+            //    Bind our texture object (make it the current texture).
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, TextureName);
 
             //  Set the image data.
@@ -180,16 +180,16 @@ namespace SharpGL.SceneGraph.Assets
             }
         }
 
-	
-		/// <summary>
-		/// This function destroys the OpenGL object that is a representation of this texture.
-		/// </summary>
-		public virtual void Destroy(OpenGL gl)
-		{
+    
+        /// <summary>
+        /// This function destroys the OpenGL object that is a representation of this texture.
+        /// </summary>
+        public virtual void Destroy(OpenGL gl)
+        {
             //  Only destroy if we have a valid id.
             if(glTextureArray[0] != 0)
             {
-                //	Delete the texture object.
+                //    Delete the texture object.
                 gl.DeleteTextures(1, glTextureArray);
                 glTextureArray[0] = 0;
 
@@ -199,7 +199,7 @@ namespace SharpGL.SceneGraph.Assets
                 //  Reset width and height.
                 width = height = 0;
             }
-		}
+        }
 
         /// <summary>
         /// This function (attempts) to make a bitmap from the raw data. The fact that
@@ -226,25 +226,25 @@ namespace SharpGL.SceneGraph.Assets
             return bitmap;
         }
 
-		/// <summary>
-		/// This is an array of bytes (r, g, b, a) that represent the pixels in this
-		/// texture object.
-		/// </summary>
+        /// <summary>
+        /// This is an array of bytes (r, g, b, a) that represent the pixels in this
+        /// texture object.
+        /// </summary>
         private byte[] pixelData = null;
 
-		/// <summary>
-		/// The width of the texture image.
-		/// </summary>
+        /// <summary>
+        /// The width of the texture image.
+        /// </summary>
         private int width = 0;
 
-		/// <summary>
-		/// The height of the texture image.
-		/// </summary>
+        /// <summary>
+        /// The height of the texture image.
+        /// </summary>
         private int height = 0;
 
-		/// <summary>
-		/// This is for OpenGL textures, it is the unique ID for the OpenGL texture.
-		/// </summary>
+        /// <summary>
+        /// This is for OpenGL textures, it is the unique ID for the OpenGL texture.
+        /// </summary>
         private uint[] glTextureArray = new uint[1] { 0 };
 
         /// <summary>
@@ -253,10 +253,10 @@ namespace SharpGL.SceneGraph.Assets
         /// <value>
         /// The name of the texture.
         /// </value>
-		[Description("The internal texture code.."), Category("Texture")]
-		public uint TextureName
-		{
+        [Description("The internal texture code.."), Category("Texture")]
+        public uint TextureName
+        {
             get { return glTextureArray[0]; }
-		}
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace SharpGL.SceneGraph.Raytracing
             //  Useful references.
             OpenGL gl = scene.OpenGL;
 
-            //	First, we need the matricies and viewport.
+            //    First, we need the matricies and viewport.
             double[] modelview = new double[16];
             double[] projection = new double[16];
             int[] viewport = new int[4];
@@ -36,19 +36,19 @@ namespace SharpGL.SceneGraph.Raytracing
             int screenwidth = viewport[2];
             int screenheight = viewport[3];
 
-            //	From frustum data, we make a screen origin, and s/t vectors.
+            //    From frustum data, we make a screen origin, and s/t vectors.
             Vertex s = new Vertex(0, 0.03f, 0);
             Vertex t = new Vertex(0, 0, 0.05f);
             Vertex vScreenOrigin = new Vertex(0, 0, 5);
 
-            //	Go through every pixel we have, and convert it into a screen pixel.
+            //    Go through every pixel we have, and convert it into a screen pixel.
             ScreenPixel[] pixels = new ScreenPixel[viewport[2] * viewport[3]];
 
             for (int y = 0; y < screenheight; y++)
             {
                 for (int x = 0; x < screenwidth; x++)
                 {
-                    //	Get plane coordinates first of all.
+                    //    Get plane coordinates first of all.
                     int planeX = x - (screenwidth / 2);
                     int planeY = y - (screenwidth / 2);
 
@@ -56,7 +56,7 @@ namespace SharpGL.SceneGraph.Raytracing
                     float worldY = vScreenOrigin.Y + (planeX * t.Y) + (planeY * s.Y);
                     float worldZ = vScreenOrigin.Z + (planeX * t.Z) + (planeY * s.Z);
 
-                    //	Finally, pack all that data into a ScreenPixel.
+                    //    Finally, pack all that data into a ScreenPixel.
                     ScreenPixel pixel = new ScreenPixel();
                     pixel.x = x;
                     pixel.y = y;
@@ -71,12 +71,12 @@ namespace SharpGL.SceneGraph.Raytracing
             //  Create the resulting bitmap.
             System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(viewport[2], viewport[3]);
 
-            //	Now go through every ray and test for intersections.
+            //    Now go through every ray and test for intersections.
             int pixelcounter = 0;
             int pixelcount = viewport[2] * viewport[3];
             foreach (ScreenPixel pix in pixels)
             {
-                //	Raytrace the polygons.
+                //    Raytrace the polygons.
                 Intersection closest = new Intersection();
                 foreach (var raytracable in scene.SceneContainer.Traverse(se => se is IRayTracable))
                 {

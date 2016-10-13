@@ -179,7 +179,7 @@ namespace SharpGL.SceneGraph.Core
         /// Gets or sets a value indicating whether this instance is enabled.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is enabled; otherwise, <c>false</c>.
+        ///     <c>true</c> if this instance is enabled; otherwise, <c>false</c>.
         /// </value>
         [Description("If true, the object participates in rendering."), Category("Scene Element")]
         [XmlAttribute]

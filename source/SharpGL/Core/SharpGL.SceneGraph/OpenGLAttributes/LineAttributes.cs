@@ -1,15 +1,12 @@
-using System;
-using System.Drawing;
-using System.ComponentModel;
-
-using SharpGL.SceneGraph;
 using SharpGL.Enumerations;
+using System;
+using System.ComponentModel;
 
 namespace SharpGL.OpenGLAttributes
 {
-	/// <summary>
-	/// The line attributes.
-	/// </summary>
+    /// <summary>
+    /// The line attributes.
+    /// </summary>
     [TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
     [Serializable()]
     public class LineAttributes : OpenGLAttributeGroup
@@ -28,8 +25,8 @@ namespace SharpGL.OpenGLAttributes
         /// <param name="gl">The OpenGL instance.</param>
         public override void SetAttributes(OpenGL gl)
         {
-            if(width.HasValue) gl.LineWidth(width.Value);
-            if(smooth.HasValue) gl.EnableIf(OpenGL.GL_LINE_SMOOTH, smooth.Value);
+            if (width.HasValue) gl.LineWidth(width.Value);
+            if (smooth.HasValue) gl.EnableIf(OpenGL.GL_LINE_SMOOTH, smooth.Value);
         }
 
         /// <summary>

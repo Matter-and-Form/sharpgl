@@ -7,8 +7,8 @@ namespace SharpGL
     /// <summary>
     /// Useful functions imported from the Win32 SDK.
     /// </summary>
-	public static class Win32
-	{
+    public static class Win32
+    {
         /// <summary>
         /// Initializes the <see cref="Win32"/> class.
         /// </summary>
@@ -17,13 +17,13 @@ namespace SharpGL
             //  Load the openGL library - without this wgl calls will fail.
             IntPtr glLibrary = Win32.LoadLibrary(OpenGL32);
         }
-        		
+                
         //  The names of the libraries we're importing.
-		public const string Kernel32 = "kernel32.dll";
-		public const string OpenGL32 = "opengl32.dll";
-		public const string Glu32 = "Glu32.dll";
-		public const string Gdi32 = "gdi32.dll";
-		public const string User32 = "user32.dll";
+        public const string Kernel32 = "kernel32.dll";
+        public const string OpenGL32 = "opengl32.dll";
+        public const string Glu32 = "Glu32.dll";
+        public const string Gdi32 = "gdi32.dll";
+        public const string User32 = "user32.dll";
 
         #region Kernel32 Functions
 
@@ -116,119 +116,119 @@ namespace SharpGL
         #region PixelFormatDescriptor structure and flags.
 
         [StructLayout(LayoutKind.Explicit)]
-		public class PIXELFORMATDESCRIPTOR
-		{
-			[FieldOffset(0)]
-			public UInt16 nSize;
-			[FieldOffset(2)]
-			public UInt16 nVersion;
-			[FieldOffset(4)]
-			public UInt32 dwFlags;
-			[FieldOffset(8)]
-			public Byte iPixelType;
-			[FieldOffset(9)]
-			public Byte cColorBits;
-			[FieldOffset(10)]
-			public Byte cRedBits;
-			[FieldOffset(11)]
-			public Byte cRedShift;
-			[FieldOffset(12)]
-			public Byte cGreenBits;
-			[FieldOffset(13)]
-			public Byte cGreenShift;
-			[FieldOffset(14)]
-			public Byte cBlueBits;
-			[FieldOffset(15)]
-			public Byte cBlueShift;
-			[FieldOffset(16)]
-			public Byte cAlphaBits;
-			[FieldOffset(17)]
-			public Byte cAlphaShift;
-			[FieldOffset(18)]
-			public Byte cAccumBits;
-			[FieldOffset(19)]
-			public Byte cAccumRedBits;
-			[FieldOffset(20)]
-			public Byte cAccumGreenBits;
-			[FieldOffset(21)]
-			public Byte cAccumBlueBits;
-			[FieldOffset(22)]
-			public Byte cAccumAlphaBits;
-			[FieldOffset(23)]
-			public Byte cDepthBits;
-			[FieldOffset(24)]
-			public Byte cStencilBits;
-			[FieldOffset(25)]
-			public Byte cAuxBuffers;
-			[FieldOffset(26)]
-			public SByte iLayerType;
-			[FieldOffset(27)]
-			public Byte bReserved;
-			[FieldOffset(28)]
-			public UInt32 dwLayerMask;
-			[FieldOffset(32)]
-			public UInt32 dwVisibleMask;
-			[FieldOffset(36)]
-			public UInt32 dwDamageMask;
+        public class PIXELFORMATDESCRIPTOR
+        {
+            [FieldOffset(0)]
+            public UInt16 nSize;
+            [FieldOffset(2)]
+            public UInt16 nVersion;
+            [FieldOffset(4)]
+            public UInt32 dwFlags;
+            [FieldOffset(8)]
+            public Byte iPixelType;
+            [FieldOffset(9)]
+            public Byte cColorBits;
+            [FieldOffset(10)]
+            public Byte cRedBits;
+            [FieldOffset(11)]
+            public Byte cRedShift;
+            [FieldOffset(12)]
+            public Byte cGreenBits;
+            [FieldOffset(13)]
+            public Byte cGreenShift;
+            [FieldOffset(14)]
+            public Byte cBlueBits;
+            [FieldOffset(15)]
+            public Byte cBlueShift;
+            [FieldOffset(16)]
+            public Byte cAlphaBits;
+            [FieldOffset(17)]
+            public Byte cAlphaShift;
+            [FieldOffset(18)]
+            public Byte cAccumBits;
+            [FieldOffset(19)]
+            public Byte cAccumRedBits;
+            [FieldOffset(20)]
+            public Byte cAccumGreenBits;
+            [FieldOffset(21)]
+            public Byte cAccumBlueBits;
+            [FieldOffset(22)]
+            public Byte cAccumAlphaBits;
+            [FieldOffset(23)]
+            public Byte cDepthBits;
+            [FieldOffset(24)]
+            public Byte cStencilBits;
+            [FieldOffset(25)]
+            public Byte cAuxBuffers;
+            [FieldOffset(26)]
+            public SByte iLayerType;
+            [FieldOffset(27)]
+            public Byte bReserved;
+            [FieldOffset(28)]
+            public UInt32 dwLayerMask;
+            [FieldOffset(32)]
+            public UInt32 dwVisibleMask;
+            [FieldOffset(36)]
+            public UInt32 dwDamageMask;
 
 
             public void Init()
             {
                 nSize = (ushort)Marshal.SizeOf(this);
             }
-		}
+        }
 
-		public struct PixelFormatDescriptor
-		{
-			public ushort nSize;
-			public ushort nVersion;
-			public uint   dwFlags;
-			public byte   iPixelType;
-			public byte   cColorBits;
-			public byte   cRedBits;
-			public byte   cRedShift;
-			public byte   cGreenBits;
-			public byte   cGreenShift;
-			public byte   cBlueBits;
-			public byte   cBlueShift;
-			public byte   cAlphaBits;
-			public byte   cAlphaShift;
-			public byte   cAccumBits;
-			public byte   cAccumRedBits;
-			public byte   cAccumGreenBits;
-			public byte   cAccumBlueBits;
-			public byte   cAccumAlphaBits;
-			public byte   cDepthBits;
-			public byte   cStencilBits;
-			public byte   cAuxBuffers;
-			public sbyte  iLayerType;
-			public byte   bReserved;
-			public uint   dwLayerMask;
-			public uint   dwVisibleMask;
-			public uint   dwDamageMask;
-		}
+        public struct PixelFormatDescriptor
+        {
+            public ushort nSize;
+            public ushort nVersion;
+            public uint   dwFlags;
+            public byte   iPixelType;
+            public byte   cColorBits;
+            public byte   cRedBits;
+            public byte   cRedShift;
+            public byte   cGreenBits;
+            public byte   cGreenShift;
+            public byte   cBlueBits;
+            public byte   cBlueShift;
+            public byte   cAlphaBits;
+            public byte   cAlphaShift;
+            public byte   cAccumBits;
+            public byte   cAccumRedBits;
+            public byte   cAccumGreenBits;
+            public byte   cAccumBlueBits;
+            public byte   cAccumAlphaBits;
+            public byte   cDepthBits;
+            public byte   cStencilBits;
+            public byte   cAuxBuffers;
+            public sbyte  iLayerType;
+            public byte   bReserved;
+            public uint   dwLayerMask;
+            public uint   dwVisibleMask;
+            public uint   dwDamageMask;
+        }
         
-        public const byte PFD_TYPE_RGBA			= 0;
-		public const byte PFD_TYPE_COLORINDEX		= 1;
+        public const byte PFD_TYPE_RGBA            = 0;
+        public const byte PFD_TYPE_COLORINDEX        = 1;
 
-		public const uint PFD_DOUBLEBUFFER			= 1;
-		public const uint PFD_STEREO				= 2;
-		public const uint PFD_DRAW_TO_WINDOW		= 4;
-		public const uint PFD_DRAW_TO_BITMAP		= 8;
-		public const uint PFD_SUPPORT_GDI			= 16;
-		public const uint PFD_SUPPORT_OPENGL		= 32;
-		public const uint PFD_GENERIC_FORMAT		= 64;
-		public const uint PFD_NEED_PALETTE			= 128;
-		public const uint PFD_NEED_SYSTEM_PALETTE	= 256;
-		public const uint PFD_SWAP_EXCHANGE		    = 512;
-		public const uint PFD_SWAP_COPY			    = 1024;
-		public const uint PFD_SWAP_LAYER_BUFFERS	= 2048;
-		public const uint PFD_GENERIC_ACCELERATED	= 4096;
-		public const uint PFD_SUPPORT_DIRECTDRAW	= 8192;
+        public const uint PFD_DOUBLEBUFFER            = 1;
+        public const uint PFD_STEREO                = 2;
+        public const uint PFD_DRAW_TO_WINDOW        = 4;
+        public const uint PFD_DRAW_TO_BITMAP        = 8;
+        public const uint PFD_SUPPORT_GDI            = 16;
+        public const uint PFD_SUPPORT_OPENGL        = 32;
+        public const uint PFD_GENERIC_FORMAT        = 64;
+        public const uint PFD_NEED_PALETTE            = 128;
+        public const uint PFD_NEED_SYSTEM_PALETTE    = 256;
+        public const uint PFD_SWAP_EXCHANGE            = 512;
+        public const uint PFD_SWAP_COPY                = 1024;
+        public const uint PFD_SWAP_LAYER_BUFFERS    = 2048;
+        public const uint PFD_GENERIC_ACCELERATED    = 4096;
+        public const uint PFD_SUPPORT_DIRECTDRAW    = 8192;
 
-		public const sbyte PFD_MAIN_PLANE			= 0;
-		public const sbyte PFD_OVERLAY_PLANE		= 1;
-		public const sbyte PFD_UNDERLAY_PLANE		= -1;
+        public const sbyte PFD_MAIN_PLANE            = 0;
+        public const sbyte PFD_OVERLAY_PLANE        = 1;
+        public const sbyte PFD_UNDERLAY_PLANE        = -1;
 
         public delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
@@ -508,30 +508,30 @@ namespace SharpGL
             }
         }
         
-		#endregion
+        #endregion
     
         #region Win32 Function Definitions.
 
 
 
-		//	Unmanaged functions from the Win32 graphics library.
-		[DllImport(Gdi32, SetLastError = true)] 
-		public unsafe static extern int ChoosePixelFormat(IntPtr hDC, 
-			[In, MarshalAs(UnmanagedType.LPStruct)] PIXELFORMATDESCRIPTOR ppfd);
+        //    Unmanaged functions from the Win32 graphics library.
+        [DllImport(Gdi32, SetLastError = true)] 
+        public unsafe static extern int ChoosePixelFormat(IntPtr hDC, 
+            [In, MarshalAs(UnmanagedType.LPStruct)] PIXELFORMATDESCRIPTOR ppfd);
 
-		[DllImport(Gdi32, SetLastError = true)] 
-		public unsafe static extern int SetPixelFormat(IntPtr hDC, int iPixelFormat, 
-			[In, MarshalAs(UnmanagedType.LPStruct)] PIXELFORMATDESCRIPTOR ppfd );
+        [DllImport(Gdi32, SetLastError = true)] 
+        public unsafe static extern int SetPixelFormat(IntPtr hDC, int iPixelFormat, 
+            [In, MarshalAs(UnmanagedType.LPStruct)] PIXELFORMATDESCRIPTOR ppfd );
 
         [DllImport(Gdi32, SetLastError = true)]
         public static extern IntPtr GetStockObject(uint fnObject);
 
-		[DllImport(Gdi32, SetLastError = true)] 
-		public static extern int SwapBuffers(IntPtr hDC);
+        [DllImport(Gdi32, SetLastError = true)] 
+        public static extern int SwapBuffers(IntPtr hDC);
 
-		[DllImport(Gdi32, SetLastError = true)] 
-		public static extern bool BitBlt(IntPtr hDC, int x, int y, int width, 
-			int height, IntPtr hDCSource, int sourceX, int sourceY, uint type);
+        [DllImport(Gdi32, SetLastError = true)] 
+        public static extern bool BitBlt(IntPtr hDC, int x, int y, int width, 
+            int height, IntPtr hDCSource, int sourceX, int sourceY, uint type);
 
         [DllImport(Gdi32, SetLastError = true)]
         public static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BITMAPINFO pbmi,
@@ -563,7 +563,7 @@ namespace SharpGL
         [DllImport(User32, SetLastError = true)]
         public static extern IntPtr GetDC(IntPtr hWnd);
 
-		[DllImport(User32, SetLastError = true)]
+        [DllImport(User32, SetLastError = true)]
         public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
         [DllImport(User32, SetLastError = true)]
@@ -578,13 +578,13 @@ namespace SharpGL
         [return: MarshalAs(UnmanagedType.U2)]
         public static extern short RegisterClassEx([In] ref WNDCLASSEX lpwcx);
 
-		[DllImport(User32, SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		public static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
+        [DllImport(User32, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
 
-		#endregion
+        #endregion
 
-		[Flags]
+        [Flags]
         public enum SetWindowPosFlags : uint
         {
             SWP_ASYNCWINDOWPOS = 0x4000,
@@ -837,7 +837,7 @@ namespace SharpGL
         public const uint DC_PEN      = 19;
         
         public const uint DEFAULT_PITCH           = 0;
-		public const uint FIXED_PITCH             = 1;
+        public const uint FIXED_PITCH             = 1;
         public const uint VARIABLE_PITCH = 2;
         
         public const uint DEFAULT_QUALITY                = 0;
@@ -880,21 +880,21 @@ namespace SharpGL
         public const uint FW_EXTRABOLD        = 800;
         public const uint FW_HEAVY            = 900;
             
-        public const uint SRCCOPY		= 0x00CC0020;	// dest = source                   
-		public const uint SRCPAINT		= 0x00EE0086;	// dest = source OR dest           
-		public const uint SRCAND		= 0x008800C6;	// dest = source AND dest          
-		public const uint SRCINVERT	    = 0x00660046;	// dest = source XOR dest          
-		public const uint SRCERASE		= 0x00440328;	// dest = source AND (NOT dest )   
-		public const uint NOTSRCCOPY	= 0x00330008;	// dest = (NOT source)             
-		public const uint NOTSRCERASE	= 0x001100A6;	// dest = (NOT src) AND (NOT dest) 
-		public const uint MERGECOPY	    = 0x00C000CA;	// dest = (source AND pattern)     
-		public const uint MERGEPAINT	= 0x00BB0226;	// dest = (NOT source) OR dest     
-		public const uint PATCOPY		= 0x00F00021;	// dest = pattern                  
-		public const uint PATPAINT		= 0x00FB0A09;	// dest = DPSnoo                   
-		public const uint PATINVERT	    = 0x005A0049;	// dest = pattern XOR dest         
-		public const uint DSTINVERT	    = 0x00550009;	// dest = (NOT dest)               
-		public const uint BLACKNESS	    = 0x00000042;	// dest = BLACK                    
-		public const uint WHITENESS	    = 0x00FF0062;	// dest = WHITE     
+        public const uint SRCCOPY        = 0x00CC0020;    // dest = source                   
+        public const uint SRCPAINT        = 0x00EE0086;    // dest = source OR dest           
+        public const uint SRCAND        = 0x008800C6;    // dest = source AND dest          
+        public const uint SRCINVERT        = 0x00660046;    // dest = source XOR dest          
+        public const uint SRCERASE        = 0x00440328;    // dest = source AND (NOT dest )   
+        public const uint NOTSRCCOPY    = 0x00330008;    // dest = (NOT source)             
+        public const uint NOTSRCERASE    = 0x001100A6;    // dest = (NOT src) AND (NOT dest) 
+        public const uint MERGECOPY        = 0x00C000CA;    // dest = (source AND pattern)     
+        public const uint MERGEPAINT    = 0x00BB0226;    // dest = (NOT source) OR dest     
+        public const uint PATCOPY        = 0x00F00021;    // dest = pattern                  
+        public const uint PATPAINT        = 0x00FB0A09;    // dest = DPSnoo                   
+        public const uint PATINVERT        = 0x005A0049;    // dest = pattern XOR dest         
+        public const uint DSTINVERT        = 0x00550009;    // dest = (NOT dest)               
+        public const uint BLACKNESS        = 0x00000042;    // dest = BLACK                    
+        public const uint WHITENESS        = 0x00FF0062;    // dest = WHITE     
         
         public const uint DIB_RGB_COLORS = 0;
         public const uint DIB_PAL_COLORS = 1;     
@@ -910,5 +910,5 @@ namespace SharpGL
         public const uint CS_BYTEALIGNCLIENT   = 0x1000;
         public const uint CS_BYTEALIGNWINDOW   = 0x2000;
         public const uint CS_GLOBALCLASS       = 0x4000; 
-	}
+    }
 }

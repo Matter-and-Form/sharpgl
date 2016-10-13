@@ -17,46 +17,46 @@ namespace SharpGL.SceneGraph.Feedback
         {
             int count = values;
 
-            //	Create the triangle.
+            //    Create the triangle.
             triangle = new Polygon();
             triangle.Name = "Triangulated Polygon";
 
-            //	For every value in the buffer...
+            //    For every value in the buffer...
             while (count != 0)
             {
-                //	Get the token.
+                //    Get the token.
                 float token = feedbackBuffer[values - count];
 
-                //	Decrement count (move to the next token).
+                //    Decrement count (move to the next token).
                 count--;
 
-                //	Check the type of the token.
+                //    Check the type of the token.
                 switch ((int)token)
                 {
                     case (int)OpenGL.GL_PASS_THROUGH_TOKEN:
                         count--;
                         break;
                     case (int)OpenGL.GL_POINT_TOKEN:
-                        //	We use only polygons, skip this single vertex (11 floats).
+                        //    We use only polygons, skip this single vertex (11 floats).
                         count -= 11;
                         break;
                     case (int)OpenGL.GL_LINE_TOKEN:
-                        //	We use only polygons, skip this vertex pair (22 floats).
+                        //    We use only polygons, skip this vertex pair (22 floats).
                         count -= 22;
                         break;
                     case (int)OpenGL.GL_LINE_RESET_TOKEN:
-                        //	We use only polygons, skip this vertex pair (22 floats).
+                        //    We use only polygons, skip this vertex pair (22 floats).
                         count -= 22;
                         break;
                     case (int)OpenGL.GL_POLYGON_TOKEN:
 
-                        //	Get the number of vertices.
+                        //    Get the number of vertices.
                         int vertexCount = (int)feedbackBuffer[values - count--];
 
-                        //	Create an array of vertices.
+                        //    Create an array of vertices.
                         Vertex[] vertices = new Vertex[vertexCount];
 
-                        //	Parse them.
+                        //    Parse them.
                         for (int i = 0; i < vertexCount; i++)
                         {
                             vertices[i] = new Vertex();
@@ -68,18 +68,18 @@ namespace SharpGL.SceneGraph.Feedback
                             vertices[i].Y = (float)coords[1];
                             vertices[i].Z = (float)coords[2];
 
-                            //	Ignore the four r,g,b,a values and four material coords.
+                            //    Ignore the four r,g,b,a values and four material coords.
                             count -= 8;
                         }
 
-                        //	Add a new face to the current polygon.
+                        //    Add a new face to the current polygon.
                         triangle.AddFaceFromVertexData(vertices);
 
                         break;
                 }
             }
 
-            //	Triangulate it.
+            //    Triangulate it.
             triangle.Triangulate();
         }
 

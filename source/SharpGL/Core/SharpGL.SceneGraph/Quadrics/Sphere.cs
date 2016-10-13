@@ -34,7 +34,7 @@ namespace SharpGL.SceneGraph.Quadrics
             //  Call the base.
             base.Render(gl, renderMode);
 
-            //	Draw a sphere with the current settings.
+            //    Draw a sphere with the current settings.
             gl.Sphere(glQuadric, radius, slices, stacks);
         }
 

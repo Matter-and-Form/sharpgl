@@ -14,17 +14,17 @@ namespace SharpGL.Serialization.Caligari
     {
         protected virtual string Peep(BinaryReader reader)
         {
-            //	Get the current position.
+            //    Get the current position.
             long pos = reader.BaseStream.Position;
 
-            //	Read a header.
+            //    Read a header.
             CaligariChunkHeader header = new CaligariChunkHeader();
             header.Read(reader);
 
-            //	Move the file to it's original position.
+            //    Move the file to it's original position.
             reader.BaseStream.Position = pos;
 
-            //	Return the type.
+            //    Return the type.
             return header.chunkType;
         }
 
@@ -40,41 +40,41 @@ namespace SharpGL.Serialization.Caligari
                 //  Open a binary reader.
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    //	Create a scene.
+                    //    Create a scene.
                     scene = new Scene();
 
-                    //	First, read the header.
+                    //    First, read the header.
                     CaligariFileHeader header = new CaligariFileHeader();
                     header.Read(reader);
 
-                    //	Here we can make sure that it really is a Caligari File.
+                    //    Here we can make sure that it really is a Caligari File.
                     if (header.id != "Caligari " || header.dataMode != 'B')
                     {
                         System.Diagnostics.Debugger.Log(1, "File I/O", "File is not internally compatible.\n");
                         return null;
                     }
 
-                    //	Now we go through the file, peeping at chunks.
+                    //    Now we go through the file, peeping at chunks.
                     while (true)
                     {
-                        //	Peep at the next chunk.
+                        //    Peep at the next chunk.
                         string type = Peep(reader);
 
-                        //	Check for every type of chunk.
+                        //    Check for every type of chunk.
                         if (type == "PolH")
                         {
-                            //	Read a polygon into the scene.
+                            //    Read a polygon into the scene.
                             PolygonChunk polyChunk = new PolygonChunk();
                             scene.SceneContainer.AddChild((Polygon)polyChunk.Read(reader));
                         }
                         else if (type == "END ")
                         {
-                            //	It's the end of the file, so we may as well break.
+                            //    It's the end of the file, so we may as well break.
                             break;
                         }
                         else
                         {
-                            //	Well we don't know what type it is, so just read the generic chunk.
+                            //    Well we don't know what type it is, so just read the generic chunk.
                             CaligariChunk chunk = new CaligariChunk();
                             chunk.Read(reader);
                         }

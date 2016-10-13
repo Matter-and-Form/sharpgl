@@ -7,13 +7,13 @@ using SharpGL.Enumerations;
 
 namespace SharpGL.OpenGLAttributes
 {
-	/// <summary>
-	/// This class has all the settings you can edit for fog.
-	/// </summary>
-	[TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
-	[Serializable()]
+    /// <summary>
+    /// This class has all the settings you can edit for fog.
+    /// </summary>
+    [TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
+    [Serializable()]
     public class TransformAttributes : OpenGLAttributeGroup
-	{
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="TransformAttributes"/> class.
         /// </summary>
@@ -60,12 +60,12 @@ Enable bits for the user-definable clipping planes
         /// <value>
         /// The enable normalize.
         /// </value>
-		[Description("."), Category("Transform")]
+        [Description("."), Category("Transform")]
         public bool? EnableNormalize
-		{
+        {
             get { return enableNormalize; }
             set { enableNormalize = value; }
-		}
+        }
 
         /// <summary>
         /// Gets or sets the matrix mode.
@@ -79,5 +79,5 @@ Enable bits for the user-definable clipping planes
             get { return matrixMode; }
             set { matrixMode = value; }
         }
-	}
+    }
 }

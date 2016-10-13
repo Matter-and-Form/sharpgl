@@ -7,14 +7,14 @@ using System.Xml.Serialization;
 
 namespace SharpGL.SceneGraph.Evaluators
 {
-	/// <summary>
-	/// The NURBS class is the base for NURBS objects, such as curves and surfaces.
-	/// </summary>
-	[Serializable()]
-	public abstract class NurbsBase : 
+    /// <summary>
+    /// The NURBS class is the base for NURBS objects, such as curves and surfaces.
+    /// </summary>
+    [Serializable()]
+    public abstract class NurbsBase : 
         Evaluator,
         IHasOpenGLContext
-	{
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="NurbsBase"/> class.
         /// </summary>
@@ -30,7 +30,7 @@ namespace SharpGL.SceneGraph.Evaluators
         /// <param name="renderMode">The render mode.</param>
         public override void Render(OpenGL gl, Core.RenderMode renderMode)
         {
-			//	Set the properties.
+            //    Set the properties.
             gl.NurbsProperty(nurbsRenderer, (int)OpenGL.GLU_DISPLAY_MODE, (float)displayMode);
         }
 
@@ -56,22 +56,22 @@ namespace SharpGL.SceneGraph.Evaluators
             CurrentOpenGLContext = null;
         }
 
-		public enum NurbsDisplayMode : uint
-		{
+        public enum NurbsDisplayMode : uint
+        {
             OutlinePatch = OpenGL.GLU_OUTLINE_PATCH,
             OutlinePolygon = OpenGL.GLU_OUTLINE_POLYGON,
-			Fill = OpenGL.GLU_FILL,
-		}
+            Fill = OpenGL.GLU_FILL,
+        }
 
-		/// <summary>
-		/// This is the pointer to the underlying NURBS object.
-		/// </summary>
-		protected IntPtr nurbsRenderer = IntPtr.Zero;
+        /// <summary>
+        /// This is the pointer to the underlying NURBS object.
+        /// </summary>
+        protected IntPtr nurbsRenderer = IntPtr.Zero;
 
         /// <summary>
         /// The display mode.
         /// </summary>
-		private NurbsDisplayMode displayMode = NurbsDisplayMode.OutlinePolygon;
+        private NurbsDisplayMode displayMode = NurbsDisplayMode.OutlinePolygon;
 
         /// <summary>
         /// Gets or sets the display mode.
@@ -79,12 +79,12 @@ namespace SharpGL.SceneGraph.Evaluators
         /// <value>
         /// The display mode.
         /// </value>
-		[Description("The way that the NURBS object is rendered."), Category("NURBS")]
-		public NurbsDisplayMode DisplayMode
-		{
-			get {return displayMode;}
-			set {displayMode = value;}
-		}
+        [Description("The way that the NURBS object is rendered."), Category("NURBS")]
+        public NurbsDisplayMode DisplayMode
+        {
+            get {return displayMode;}
+            set {displayMode = value;}
+        }
 
         /// <summary>
         /// Gets the current OpenGL that the object exists in context.

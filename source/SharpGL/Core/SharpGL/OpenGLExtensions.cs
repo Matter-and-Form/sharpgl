@@ -13,7 +13,7 @@ namespace SharpGL
         /// </summary>
         /// <param name="extensionFunctionName">Name of the extension function.</param>
         /// <returns>
-        /// 	<c>true</c> if the extension function is supported; otherwise, <c>false</c>.
+        ///     <c>true</c> if the extension function is supported; otherwise, <c>false</c>.
         /// </returns>
         public bool IsExtensionFunctionSupported(string extensionFunctionName)
         {

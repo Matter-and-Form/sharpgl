@@ -28,12 +28,12 @@ namespace SharpGL.SceneGraph.Quadrics
             //  Call the base.
             base.Render(gl, renderMode);
 
-            //	Draw a quadric with the current settings.
+            //    Draw a quadric with the current settings.
             gl.PartialDisk(glQuadric, innerRadius, outerRadius,
                 slices, loops, startAngle, sweepAngle);
         }
 
-        //	Sphere data.
+        //    Sphere data.
         double innerRadius = 0.0;
         double outerRadius = 2.0;
         double startAngle = 0.0;
