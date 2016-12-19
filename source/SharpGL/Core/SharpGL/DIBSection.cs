@@ -23,7 +23,7 @@ namespace SharpGL
 
             //    Destroy existing objects.
             Destroy();
-            
+
             //    Create a bitmap info structure.
             Win32.BITMAPINFO info = new Win32.BITMAPINFO();
             info.Init();
@@ -39,19 +39,19 @@ namespace SharpGL
                 out bits, IntPtr.Zero, 0);
 
             Win32.SelectObject(hDC, hBitmap);
-            
+
             //    Set the OpenGL pixel format.
             SetPixelFormat(hDC, bitCount);
 
             return true;
         }
 
-    /// <summary>
-    /// Resizes the section.
-    /// </summary>
-    /// <param name="width">The width.</param>
-    /// <param name="height">The height.</param>
-    /// <param name="bitCount">The bit count.</param>
+        /// <summary>
+        /// Resizes the section.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="bitCount">The bit count.</param>
         public void Resize(int width, int height, int bitCount)
         {
             //    Destroy existing objects.
@@ -97,7 +97,7 @@ namespace SharpGL
             pixelFormat.Init();
 
             //    Set the values for the pixel format.
-            pixelFormat.nVersion  = 1;
+            pixelFormat.nVersion = 1;
             pixelFormat.dwFlags = (Win32.PFD_DRAW_TO_BITMAP | Win32.PFD_SUPPORT_OPENGL | Win32.PFD_SUPPORT_GDI);
             pixelFormat.iPixelType = Win32.PFD_TYPE_RGBA;
             pixelFormat.cColorBits = (byte)bitCount;
@@ -106,7 +106,7 @@ namespace SharpGL
 
             //    Match an appropriate pixel format 
             int iPixelformat;
-            if((iPixelformat = Win32.ChoosePixelFormat(hDC, pixelFormat)) == 0 )
+            if ((iPixelformat = Win32.ChoosePixelFormat(hDC, pixelFormat)) == 0)
                 return false;
 
             //    Sets the pixel format
@@ -119,13 +119,13 @@ namespace SharpGL
             return true;
         }
 
-    /// <summary>
-    /// Destroys this instance.
-    /// </summary>
+        /// <summary>
+        /// Destroys this instance.
+        /// </summary>
         public virtual void Destroy()
         {
             //    Destroy the bitmap.
-            if(hBitmap != IntPtr.Zero)
+            if (hBitmap != IntPtr.Zero)
             {
                 Win32.DeleteObject(hBitmap);
                 hBitmap = IntPtr.Zero;
@@ -151,7 +151,7 @@ namespace SharpGL
         /// The width.
         /// </summary>
         protected int width = 0;
-        
+
         /// <summary>
         /// The height.
         /// </summary>
@@ -163,7 +163,7 @@ namespace SharpGL
         /// <value>The handle to the bitmap.</value>
         public IntPtr HBitmap
         {
-            get {return hBitmap;}
+            get { return hBitmap; }
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace SharpGL
         /// <value>The height.</value>
         public int Height
         {
-            get {return height;}
+            get { return height; }
             protected set { height = value; }
         }
     }
