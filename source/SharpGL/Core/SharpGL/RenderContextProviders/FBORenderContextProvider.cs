@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SharpGL.Version;
+﻿using SharpGL.Version;
+using System;
 
 namespace SharpGL.RenderContextProviders
 {
@@ -41,7 +38,7 @@ namespace SharpGL.RenderContextProviders
             gl.GenFramebuffersEXT(1, ids);
             frameBufferID = ids[0];
             gl.BindFramebufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, frameBufferID);
-                        
+
             //    Create the colour render buffer and bind it, then allocate storage for it.
             gl.GenRenderbuffersEXT(1, ids);
             colourRenderBufferID = ids[0];
@@ -54,24 +51,32 @@ namespace SharpGL.RenderContextProviders
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, depthRenderBufferID);
             gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_DEPTH_COMPONENT24, width, height);
 
+            //	Create the stencil render buffer and bind it, then allocate storage for it.
+            gl.GenRenderbuffersEXT(1, ids);
+            stencilRenderBufferID = ids[0];
+            gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, stencilRenderBufferID);
+            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_STENCIL_INDEX8_EXT, width, height);
+
             //  Set the render buffer for colour and depth.
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_COLOR_ATTACHMENT0_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, colourRenderBufferID);
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_DEPTH_ATTACHMENT_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, depthRenderBufferID);
+            gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_STENCIL_ATTACHMENT_EXT,
+                OpenGL.GL_RENDERBUFFER_EXT, stencilRenderBufferID);
 
             dibSectionDeviceContext = Win32.CreateCompatibleDC(deviceContextHandle);
-        
+
             //  Create the DIB section.
             dibSection.Create(dibSectionDeviceContext, width, height, bitDepth);
-            
+
             return true;
         }
 
         private void DestroyFramebuffers()
         {
             //  Delete the render buffers.
-            gl.DeleteRenderbuffersEXT(2, new uint[] { colourRenderBufferID, depthRenderBufferID });
+            gl.DeleteRenderbuffersEXT(3, new uint[] { colourRenderBufferID, depthRenderBufferID, stencilRenderBufferID });
 
             //    Delete the framebuffer.
             gl.DeleteFramebuffersEXT(1, new uint[] { frameBufferID });
@@ -79,6 +84,7 @@ namespace SharpGL.RenderContextProviders
             //  Reset the IDs.
             colourRenderBufferID = 0;
             depthRenderBufferID = 0;
+            stencilRenderBufferID = 0;
             frameBufferID = 0;
         }
 
@@ -136,11 +142,19 @@ namespace SharpGL.RenderContextProviders
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, depthRenderBufferID);
             gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_DEPTH_COMPONENT24, width, height);
 
+            //	Create the stencil render buffer and bind it, then allocate storage for it.
+            gl.GenRenderbuffersEXT(1, ids);
+            stencilRenderBufferID = ids[0];
+            gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, stencilRenderBufferID);
+            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_STENCIL_INDEX8_EXT, width, height);
+
             //  Set the render buffer for colour and depth.
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_COLOR_ATTACHMENT0_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, colourRenderBufferID);
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_DEPTH_ATTACHMENT_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, depthRenderBufferID);
+            gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_STENCIL_ATTACHMENT_EXT,
+                OpenGL.GL_RENDERBUFFER_EXT, stencilRenderBufferID);
         }
 
         public override void Blit(IntPtr hdc)
@@ -151,7 +165,7 @@ namespace SharpGL.RenderContextProviders
                 gl.ReadBuffer(OpenGL.GL_COLOR_ATTACHMENT0_EXT);
 
                 //    Read the pixels into the DIB section.
-                gl.ReadPixels(0, 0, Width, Height, OpenGL.GL_BGRA, 
+                gl.ReadPixels(0, 0, Width, Height, OpenGL.GL_BGRA,
                     OpenGL.GL_UNSIGNED_BYTE, dibSection.Bits);
 
                 //    Blit the DC (containing the DIB section) to the target DC.
@@ -162,6 +176,7 @@ namespace SharpGL.RenderContextProviders
 
         protected uint colourRenderBufferID = 0;
         protected uint depthRenderBufferID = 0;
+        protected uint stencilRenderBufferID = 0;
         protected uint frameBufferID = 0;
         protected IntPtr dibSectionDeviceContext = IntPtr.Zero;
         protected DIBSection dibSection = new DIBSection();
