@@ -34,7 +34,6 @@ namespace SharpGL.RenderContextProviders
             uint[] ids = new uint[1];
 
             //  First, create the frame buffer and bind it.
-            ids = new uint[1];
             gl.GenFramebuffersEXT(1, ids);
             frameBufferID = ids[0];
             gl.BindFramebufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, frameBufferID);

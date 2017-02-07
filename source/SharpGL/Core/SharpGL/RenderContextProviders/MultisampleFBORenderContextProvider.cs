@@ -40,6 +40,19 @@ namespace SharpGL.RenderContextProviders
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, msColourRenderBufferID);
             gl.RenderbufferStorageMultisampleEXT(OpenGL.GL_RENDERBUFFER_EXT, MSAA, OpenGL.GL_RGBA, width, height);
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_COLOR_ATTACHMENT0_EXT, OpenGL.GL_RENDERBUFFER_EXT, msColourRenderBufferID);
+
+            //    Create the depth stencil render buffer and bind it, then allocate storage for it.
+            gl.GenRenderbuffersEXT(1, ids);
+            msDepthStencilRenderBufferID = ids[0];
+            gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, msDepthStencilRenderBufferID);
+            gl.RenderbufferStorageMultisampleEXT(OpenGL.GL_RENDERBUFFER_EXT, MSAA, OpenGL.GL_DEPTH24_STENCIL8, width, height);
+
+            //  Set the render buffer for colour, depth and stencil.
+            gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_DEPTH_ATTACHMENT_EXT,
+                OpenGL.GL_RENDERBUFFER_EXT, msDepthStencilRenderBufferID);
+            gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_STENCIL_ATTACHMENT_EXT,
+                OpenGL.GL_RENDERBUFFER_EXT, msDepthStencilRenderBufferID);
+
             ValidateFramebufferStatus(gl.CheckFramebufferStatusEXT(OpenGL.GL_FRAMEBUFFER_EXT));
             return true;
         }
@@ -48,7 +61,7 @@ namespace SharpGL.RenderContextProviders
         {
             base.DestroyFramebuffers();
             //  Delete the render buffers.
-            gl.DeleteRenderbuffersEXT(1, new uint[] { msColourRenderBufferID });
+            gl.DeleteRenderbuffersEXT(2, new uint[] { msColourRenderBufferID, msDepthStencilRenderBufferID });
 
             //    Delete the framebuffer.
             gl.DeleteFramebuffersEXT(1, new uint[] { msFrameBufferID });
@@ -74,6 +87,19 @@ namespace SharpGL.RenderContextProviders
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, msColourRenderBufferID);
             gl.RenderbufferStorageMultisampleEXT(OpenGL.GL_RENDERBUFFER_EXT, MSAA, OpenGL.GL_RGBA, width, height);
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_COLOR_ATTACHMENT0_EXT, OpenGL.GL_RENDERBUFFER_EXT, msColourRenderBufferID);
+
+            //    Create the depth stencil render buffer and bind it, then allocate storage for it.
+            gl.GenRenderbuffersEXT(1, ids);
+            msDepthStencilRenderBufferID = ids[0];
+            gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, msDepthStencilRenderBufferID);
+            gl.RenderbufferStorageMultisampleEXT(OpenGL.GL_RENDERBUFFER_EXT, MSAA, OpenGL.GL_DEPTH24_STENCIL8, width, height);
+
+            //  Set the render buffer for colour, depth and stencil.
+            gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_DEPTH_ATTACHMENT_EXT,
+                OpenGL.GL_RENDERBUFFER_EXT, msDepthStencilRenderBufferID);
+            gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_STENCIL_ATTACHMENT_EXT,
+                OpenGL.GL_RENDERBUFFER_EXT, msDepthStencilRenderBufferID);
+
             ValidateFramebufferStatus(gl.CheckFramebufferStatusEXT(OpenGL.GL_FRAMEBUFFER_EXT));
         }
 
@@ -95,6 +121,7 @@ namespace SharpGL.RenderContextProviders
         }
 
         protected uint msColourRenderBufferID = 0;
+        protected uint msDepthStencilRenderBufferID = 0;
         protected uint msFrameBufferID = 0;
     }
 }
