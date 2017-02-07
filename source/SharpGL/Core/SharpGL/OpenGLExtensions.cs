@@ -4758,6 +4758,16 @@ namespace SharpGL
 
         #endregion
 
+        public const uint GL_READ_FRAMEBUFFER_EXT = 0x8CA8;
+        public const uint GL_DRAW_FRAMEBUFFER_EXT = 0x8CA9;
+
+        public void BlitFramebufferEXT(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter)
+        {
+            GetDelegateFor<glBlitFramebuffer>()(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+        }
+
+        private delegate void glBlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter);
+
         #region GL_EXT_draw_instanced
 
         //  Methods

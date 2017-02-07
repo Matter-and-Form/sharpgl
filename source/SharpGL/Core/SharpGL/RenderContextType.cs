@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace SharpGL
 {
     /// <summary>
@@ -31,6 +27,11 @@ namespace SharpGL
         /// <summary>
         ///    A Framebuffer Object - accelerated but may not be supported on some cards.
         /// </summary>
-        FBO
+        FBO,
+
+        /// <summary>
+        ///	A Framebuffer Object with multi sampling - accelerated but may not be supported on some cards.
+        /// </summary>
+        MultiSampleFBO
     };
 }

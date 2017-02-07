@@ -196,7 +196,7 @@ namespace SharpGL.WPF
                 m_format = bitmapSource.Format;
                 m_bytesPerPixel = gl.RenderContextProvider.BitDepth >> 3;
                 // FBO render context flips the image vertically, so transform to compensate
-                if (RenderContextType == SharpGL.RenderContextType.FBO)
+                if (RenderContextType == SharpGL.RenderContextType.FBO || RenderContextType == SharpGL.RenderContextType.MultiSampleFBO)
                 {
                     image.RenderTransform = new ScaleTransform(1.0, -1.0);
                     image.RenderTransformOrigin = new Point(0.0, 0.5);
@@ -296,6 +296,24 @@ namespace SharpGL.WPF
                     case RenderContextType.FBO:
                         {
                             var provider = gl.RenderContextProvider as FBORenderContextProvider;
+                            var hBitmap = provider.InternalDIBSection.HBitmap;
+
+                            if (hBitmap != IntPtr.Zero)
+                            {
+                                // JWH - FOR NEW RENDER METHOD:
+                                // The FBORenderContextProvider flips the image vertically, so transform it
+                                FillImageSource(provider.InternalDIBSection.Bits, hBitmap);
+
+                                //var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
+
+                                ////  Copy the pixels over.
+                                //image.Source = newFormatedBitmapSource;
+                            }
+                        }
+                        break;
+                    case RenderContextType.MultiSampleFBO:
+                        {
+                            var provider = gl.RenderContextProvider as MultisampleFBORenderContextProvider;
                             var hBitmap = provider.InternalDIBSection.HBitmap;
 
                             if (hBitmap != IntPtr.Zero)

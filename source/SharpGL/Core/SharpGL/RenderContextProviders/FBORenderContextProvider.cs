@@ -58,6 +58,7 @@ namespace SharpGL.RenderContextProviders
                 OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_STENCIL_ATTACHMENT_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
+            ValidateFramebufferStatus(gl.CheckFramebufferStatusEXT(OpenGL.GL_FRAMEBUFFER_EXT));
 
             dibSectionDeviceContext = Win32.CreateCompatibleDC(deviceContextHandle);
 
@@ -66,7 +67,7 @@ namespace SharpGL.RenderContextProviders
             return true;
         }
 
-        private void DestroyFramebuffers()
+        protected virtual void DestroyFramebuffers()
         {
             //  Delete the render buffers.
             gl.DeleteRenderbuffersEXT(2, new uint[] { colourRenderBufferID, depthStencilRenderBufferID });
@@ -102,18 +103,6 @@ namespace SharpGL.RenderContextProviders
 
             DestroyFramebuffers();
 
-            //  TODO: We should be able to just use the code below - however we 
-            //  get invalid dimension issues at the moment, so recreate for now.
-
-            /*
-            //  Resize the render buffer storage.
-            gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, colourRenderBufferID);
-            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_RGBA, width, height);
-            gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, depthRenderBufferID);
-            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_DEPTH_ATTACHMENT_EXT, width, height);
-            var complete = gl.CheckFramebufferStatusEXT(OpenGL.GL_FRAMEBUFFER_EXT);
-            */
-
             uint[] ids = new uint[1];
 
             //  First, create the frame buffer and bind it.
@@ -141,24 +130,30 @@ namespace SharpGL.RenderContextProviders
                 OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_STENCIL_ATTACHMENT_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
+            ValidateFramebufferStatus(gl.CheckFramebufferStatusEXT(OpenGL.GL_FRAMEBUFFER_EXT));
+        }
 
+        protected void ValidateFramebufferStatus(uint status)
+        {
+            if (status == OpenGL.GL_FRAMEBUFFER_COMPLETE_EXT)
+                return;
+            throw new FramebufferIncompleteException(status);
         }
 
         public override void Blit(IntPtr hdc)
         {
-            if (deviceContextHandle != IntPtr.Zero)
-            {
-                //  Set the read buffer.
-                gl.ReadBuffer(OpenGL.GL_COLOR_ATTACHMENT0_EXT);
+            if (deviceContextHandle == IntPtr.Zero)
+                return;
+            //  Set the read buffer.
+            gl.ReadBuffer(OpenGL.GL_COLOR_ATTACHMENT0_EXT);
 
-                //    Read the pixels into the DIB section.
-                gl.ReadPixels(0, 0, Width, Height, OpenGL.GL_BGRA,
-                    OpenGL.GL_UNSIGNED_BYTE, dibSection.Bits);
+            //    Read the pixels into the DIB section.
+            gl.ReadPixels(0, 0, Width, Height, OpenGL.GL_BGRA,
+                OpenGL.GL_UNSIGNED_BYTE, dibSection.Bits);
 
-                //    Blit the DC (containing the DIB section) to the target DC.
-                Win32.BitBlt(hdc, 0, 0, Width, Height,
-                    dibSectionDeviceContext, 0, 0, Win32.SRCCOPY);
-            }
+            //    Blit the DC (containing the DIB section) to the target DC.
+            Win32.BitBlt(hdc, 0, 0, Width, Height,
+                dibSectionDeviceContext, 0, 0, Win32.SRCCOPY);
         }
 
         protected uint colourRenderBufferID = 0;
@@ -175,6 +170,38 @@ namespace SharpGL.RenderContextProviders
         public DIBSection InternalDIBSection
         {
             get { return dibSection; }
+        }
+
+        private class FramebufferIncompleteException : Exception
+        {
+            public FramebufferIncompleteException(uint status)
+                : base(GetStringFromStatus(status))
+            { }
+
+            private static string GetStringFromStatus(uint status)
+            {
+                switch (status)
+                {
+                    case OpenGL.GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+                        return "36054: Incomplete Attachment";
+                    case OpenGL.GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+                        return "36055: Missing Attachment";
+                    case OpenGL.GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+                        return "36056: Incomplete Dimensions";
+                    case OpenGL.GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+                        return "36057: Incomplete Formats";
+                    case OpenGL.GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+                        return "36058: Incomplete draw buffer";
+                    case OpenGL.GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+                        return "36059: Incomplete read buffer";
+                    case OpenGL.GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+                        return "36060: Framebuffer unsupported";
+                    case OpenGL.GL_INVALID_ENUM:
+                        return "1280: Target is not a framebuffer";
+                    default:
+                        return status + ": An error has occured";
+                }
+            }
         }
     }
 }
