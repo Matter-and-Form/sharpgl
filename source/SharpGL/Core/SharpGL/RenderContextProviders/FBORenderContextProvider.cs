@@ -49,7 +49,7 @@ namespace SharpGL.RenderContextProviders
             gl.GenRenderbuffersEXT(1, ids);
             depthStencilRenderBufferID = ids[0];
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
-            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, 0x88F0, width, height);
+            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_DEPTH24_STENCIL8, width, height);
 
             //  Set the render buffer for colour, depth and stencil.
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_COLOR_ATTACHMENT0_EXT,
@@ -121,7 +121,7 @@ namespace SharpGL.RenderContextProviders
             gl.GenRenderbuffersEXT(1, ids);
             depthStencilRenderBufferID = ids[0];
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
-            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, 0x88F0, width, height);
+            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_DEPTH24_STENCIL8, width, height);
 
             //  Set the render buffer for colour, depth and stencil.
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_COLOR_ATTACHMENT0_EXT,

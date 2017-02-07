@@ -4758,6 +4758,8 @@ namespace SharpGL
 
         #endregion
 
+        public const uint GL_DEPTH24_STENCIL8 = 0x88F0;
+
         public const uint GL_READ_FRAMEBUFFER_EXT = 0x8CA8;
         public const uint GL_DRAW_FRAMEBUFFER_EXT = 0x8CA9;
 
