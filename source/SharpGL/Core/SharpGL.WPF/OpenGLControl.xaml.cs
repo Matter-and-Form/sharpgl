@@ -143,17 +143,22 @@ namespace SharpGL.WPF
                 // Force re-set of dpi and format settings
                 m_dpiX = 0;
             }
-
             //  Create our fast event args.
             eventArgsFast = new OpenGLEventArgs(gl);
 
             //  Set the most basic OpenGL styles.
             gl.ShadeModel(OpenGL.GL_SMOOTH);
+            gl.ThrowIfErrors();
             gl.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            gl.ThrowIfErrors();
             gl.ClearDepth(1.0);
+            gl.ThrowIfErrors();
             gl.Enable(OpenGL.GL_DEPTH_TEST);
+            gl.ThrowIfErrors();
             gl.DepthFunc(OpenGL.GL_LEQUAL);
+            gl.ThrowIfErrors();
             gl.Hint(OpenGL.GL_PERSPECTIVE_CORRECTION_HINT, OpenGL.GL_NICEST);
+            gl.ThrowIfErrors();
 
             //  Fire the OpenGL initialised event.
             var handler = OpenGLInitialized;
@@ -184,7 +189,7 @@ namespace SharpGL.WPF
         /// <param name="hBitmap">An IntPtr to the HBitmap for the image.  Generally provided from
         /// DIBSectionRenderContextProvider.DIBSection.HBitmap or from
         /// FBORenderContextProvider.InternalDIBSection.HBitmap.</param>
-        public void FillImageSource(IntPtr bits, IntPtr hBitmap)
+        public void CopyToWriteableBitmap(IntPtr bits, IntPtr hBitmap)
         {
             // If DPI hasen't been set, use a call to HBitmapToBitmapSource to fill the info
             // This should happen only ONCE (near the start of the application)
@@ -220,13 +225,62 @@ namespace SharpGL.WPF
                 m_writeableBitmap = new WriteableBitmap(width, height, m_dpiX, m_dpiY, m_format, null);
                 m_imageRect = new Int32Rect(0, 0, width, height);
                 m_imageStride = width * m_bytesPerPixel;
+                image.Source = m_writeableBitmap;
             }
 
             // Fill the image buffer from the bits and create the writeable bitmap
             System.Runtime.InteropServices.Marshal.Copy(bits, m_imageBuffer, 0, m_imageBuffer.Length);
             m_writeableBitmap.WritePixels(m_imageRect, m_imageBuffer, m_imageStride, 0);
+        }
 
-            image.Source = m_writeableBitmap;
+        public BitmapSource Snapshot(int width, int height)
+        {
+            try
+            {
+                // Adjust GL to desired size
+                lock (gl)
+                {
+                    UpdateOpenGLControl((int)width, (int)height);
+
+                    // Render
+                    var handler = OpenGLDraw;
+                    if (handler != null)
+                        handler(this, eventArgsFast);
+                    else
+                        gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);
+
+                    //  Render.
+                    gl.Blit(IntPtr.Zero);
+
+                    switch (RenderContextType)
+                    {
+                        case RenderContextType.FBO:
+                        case RenderContextType.MultiSampleFBO:
+                            {
+                                var provider = gl.RenderContextProvider as FBORenderContextProvider;
+                                var hBitmap = provider.InternalDIBSection.HBitmap;
+
+                                if (hBitmap != IntPtr.Zero)
+                                {
+                                    // JWH - FOR NEW RENDER METHOD:
+                                    // The FBORenderContextProvider flips the image vertically, so transform it
+                                    CopyToWriteableBitmap(provider.InternalDIBSection.Bits, hBitmap);
+                                }
+                            }
+                            break;
+                        default:
+                            return null;
+                    }
+                }
+
+                return new TransformedBitmap(m_writeableBitmap, new ScaleTransform(1.0, -1.0));
+            }
+            finally
+            {
+                // Update original size
+                UpdateOpenGLControl((int)ActualWidth, (int)ActualHeight);
+            }
+
         }
 
         /// <summary>
@@ -280,12 +334,7 @@ namespace SharpGL.WPF
                             if (hBitmap != IntPtr.Zero)
                             {
                                 // JWH - FOR NEW RENDER METHOD:
-                                FillImageSource(provider.DIBSection.Bits, hBitmap);
-
-                                //var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
-
-                                ////  Copy the pixels over.
-                                //image.Source = newFormatedBitmapSource;
+                                CopyToWriteableBitmap(provider.DIBSection.Bits, hBitmap);
                             }
                         }
                         break;
@@ -294,6 +343,7 @@ namespace SharpGL.WPF
                     case RenderContextType.HiddenWindow:
                         break;
                     case RenderContextType.FBO:
+                    case RenderContextType.MultiSampleFBO:
                         {
                             var provider = gl.RenderContextProvider as FBORenderContextProvider;
                             var hBitmap = provider.InternalDIBSection.HBitmap;
@@ -302,30 +352,7 @@ namespace SharpGL.WPF
                             {
                                 // JWH - FOR NEW RENDER METHOD:
                                 // The FBORenderContextProvider flips the image vertically, so transform it
-                                FillImageSource(provider.InternalDIBSection.Bits, hBitmap);
-
-                                //var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
-
-                                ////  Copy the pixels over.
-                                //image.Source = newFormatedBitmapSource;
-                            }
-                        }
-                        break;
-                    case RenderContextType.MultiSampleFBO:
-                        {
-                            var provider = gl.RenderContextProvider as MultisampleFBORenderContextProvider;
-                            var hBitmap = provider.InternalDIBSection.HBitmap;
-
-                            if (hBitmap != IntPtr.Zero)
-                            {
-                                // JWH - FOR NEW RENDER METHOD:
-                                // The FBORenderContextProvider flips the image vertically, so transform it
-                                FillImageSource(provider.InternalDIBSection.Bits, hBitmap);
-
-                                //var newFormatedBitmapSource = GetFormatedBitmapSource(hBitmap);
-
-                                ////  Copy the pixels over.
-                                //image.Source = newFormatedBitmapSource;
+                                CopyToWriteableBitmap(provider.InternalDIBSection.Bits, hBitmap);
                             }
                         }
                         break;

@@ -107,28 +107,39 @@ namespace SharpGL.RenderContextProviders
             //  First, create the frame buffer and bind it.
             ids = new uint[1];
             gl.GenFramebuffersEXT(1, ids);
+            gl.ThrowIfErrors();
             frameBufferID = ids[0];
             gl.BindFramebufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, frameBufferID);
+            gl.ThrowIfErrors();
 
             //    Create the colour render buffer and bind it, then allocate storage for it.
             gl.GenRenderbuffersEXT(1, ids);
+            gl.ThrowIfErrors();
             colourRenderBufferID = ids[0];
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, colourRenderBufferID);
-            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_RGBA, width, height);
+            gl.ThrowIfErrors();
+            gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_RGB, width, height);
+            gl.ThrowIfErrors();
 
             //    Create the depth stencil render buffer and bind it, then allocate storage for it.
             gl.GenRenderbuffersEXT(1, ids);
+            gl.ThrowIfErrors();
             depthStencilRenderBufferID = ids[0];
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
+            gl.ThrowIfErrors();
             gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_DEPTH24_STENCIL8, width, height);
+            gl.ThrowIfErrors();
 
             //  Set the render buffer for colour, depth and stencil.
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_COLOR_ATTACHMENT0_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, colourRenderBufferID);
+            gl.ThrowIfErrors();
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_DEPTH_ATTACHMENT_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
+            gl.ThrowIfErrors();
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_STENCIL_ATTACHMENT_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
+            gl.ThrowIfErrors();
             ValidateFramebufferStatus(gl.CheckFramebufferStatusEXT(OpenGL.GL_FRAMEBUFFER_EXT));
         }
 
