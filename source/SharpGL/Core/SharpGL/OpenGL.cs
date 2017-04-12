@@ -1,7 +1,8 @@
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using SharpGL.RenderContextProviders;
 using SharpGL.Version;
-using System;
-using System.Runtime.InteropServices;
 
 namespace SharpGL
 {
