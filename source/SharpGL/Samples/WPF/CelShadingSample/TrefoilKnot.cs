@@ -103,12 +103,14 @@ namespace CelShadingSample
             var vertexBuffer = new VertexBuffer();
             vertexBuffer.Create(gl);
             vertexBuffer.Bind(gl);
-            vertexBuffer.SetData(gl, vertexAttributeLocation, vertices.SelectMany(v => v.to_array()).ToArray(), false, 3);
+            vertexBuffer.SetData(gl, vertices.SelectMany(v => v.to_array()).ToArray());
+            vertexBuffer.SetAttributeData(gl, vertexAttributeLocation, 3, false);
          
             var normalBuffer = new VertexBuffer();
             normalBuffer.Create(gl);
             normalBuffer.Bind(gl);
-            normalBuffer.SetData(gl, normalAttributeLocation, normals.SelectMany(v => v.to_array()).ToArray(), false, 3);        
+            normalBuffer.SetData(gl, normals.SelectMany(v => v.to_array()).ToArray());
+            normalBuffer.SetAttributeData(gl, normalAttributeLocation, 3, false);
         }
 
         private void CreateIndexBuffer(OpenGL gl)
