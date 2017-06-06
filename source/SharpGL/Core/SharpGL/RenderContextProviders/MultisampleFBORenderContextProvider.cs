@@ -56,7 +56,7 @@ namespace SharpGL.RenderContextProviders
             gl.RenderbufferStorageMultisampleEXT(OpenGL.GL_RENDERBUFFER_EXT, MSAA, OpenGL.GL_DEPTH24_STENCIL8, width, height);
             gl.ThrowIfErrors();
 
-            //  Set the render buffer for colour, depth and stencil.
+            //  Set the render buffer for depth and stencil.
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_DEPTH_ATTACHMENT_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, msDepthStencilRenderBufferID);
             gl.ThrowIfErrors();

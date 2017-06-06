@@ -35,28 +35,39 @@ namespace SharpGL.RenderContextProviders
 
             //  First, create the frame buffer and bind it.
             gl.GenFramebuffersEXT(1, ids);
+            gl.ThrowIfErrors();
             frameBufferID = ids[0];
             gl.BindFramebufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, frameBufferID);
+            gl.ThrowIfErrors();
 
             //    Create the colour render buffer and bind it, then allocate storage for it.
             gl.GenRenderbuffersEXT(1, ids);
+            gl.ThrowIfErrors();
             colourRenderBufferID = ids[0];
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, colourRenderBufferID);
+            gl.ThrowIfErrors();
             gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_RGBA, width, height);
+            gl.ThrowIfErrors();
 
             //    Create the depth stencil render buffer and bind it, then allocate storage for it.
             gl.GenRenderbuffersEXT(1, ids);
+            gl.ThrowIfErrors();
             depthStencilRenderBufferID = ids[0];
             gl.BindRenderbufferEXT(OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
+            gl.ThrowIfErrors();
             gl.RenderbufferStorageEXT(OpenGL.GL_RENDERBUFFER_EXT, OpenGL.GL_DEPTH24_STENCIL8, width, height);
+            gl.ThrowIfErrors();
 
             //  Set the render buffer for colour, depth and stencil.
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_COLOR_ATTACHMENT0_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, colourRenderBufferID);
+            gl.ThrowIfErrors();
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_DEPTH_ATTACHMENT_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
+            gl.ThrowIfErrors();
             gl.FramebufferRenderbufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, OpenGL.GL_STENCIL_ATTACHMENT_EXT,
                 OpenGL.GL_RENDERBUFFER_EXT, depthStencilRenderBufferID);
+            gl.ThrowIfErrors();
             ValidateFramebufferStatus(gl.CheckFramebufferStatusEXT(OpenGL.GL_FRAMEBUFFER_EXT));
 
             dibSectionDeviceContext = Win32.CreateCompatibleDC(deviceContextHandle);
@@ -147,7 +158,7 @@ namespace SharpGL.RenderContextProviders
         {
             if (status == OpenGL.GL_FRAMEBUFFER_COMPLETE_EXT)
                 return;
-            throw new FramebufferIncompleteException(status);
+            throw new FramebufferIncompleteException(status, width, height, bitDepth);
         }
 
         public override void Blit(IntPtr hdc)
@@ -184,8 +195,8 @@ namespace SharpGL.RenderContextProviders
 
         private class FramebufferIncompleteException : Exception
         {
-            public FramebufferIncompleteException(uint status)
-                : base(GetStringFromStatus(status))
+            public FramebufferIncompleteException(uint status, int width, int height, int bitDepth)
+                : base(String.Format("{0} (h:{1} w:{2} d:{3})", GetStringFromStatus(status), height, width, bitDepth))
             { }
 
             private static string GetStringFromStatus(uint status)
@@ -206,6 +217,10 @@ namespace SharpGL.RenderContextProviders
                         return "36059: Incomplete read buffer";
                     case OpenGL.GL_FRAMEBUFFER_UNSUPPORTED_EXT:
                         return "36060: Framebuffer unsupported";
+                    case OpenGL.GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT:
+                        return "36182: Incomplete multisample";
+                    case OpenGL.GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+                        return "36264: Incomplete layer targets";
                     case OpenGL.GL_INVALID_ENUM:
                         return "1280: Target is not a framebuffer";
                     default:

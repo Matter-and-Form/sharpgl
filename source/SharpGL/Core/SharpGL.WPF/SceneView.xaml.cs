@@ -91,7 +91,7 @@ namespace SharpGL.WPF
 
                 //  Draw the scene.
                 Scene.Draw(Camera);
-                
+
                 //  Draw the FPS.
                 if (DrawFPS)
                 {
@@ -157,7 +157,7 @@ namespace SharpGL.WPF
             //  Start the timer.
             me.timer.Start();
         }
-        
+
         /// <summary>
         /// The dispatcher timer.
         /// </summary>
@@ -172,12 +172,12 @@ namespace SharpGL.WPF
         /// The last frame time in milliseconds.
         /// </summary>
         private double frameTime = 0;
-        
+
         /// <summary>
         /// The frame rate dependency property.
         /// </summary>
         private static readonly DependencyProperty FrameRateProperty =
-          DependencyProperty.Register("FrameRate", typeof(double), typeof(OpenGLControl),
+          DependencyProperty.Register("FrameRate", typeof(double), typeof(SceneView),
           new PropertyMetadata(28.0, new PropertyChangedCallback(OnFrameRateChanged)));
 
         /// <summary>
@@ -189,12 +189,12 @@ namespace SharpGL.WPF
             get { return (double)GetValue(FrameRateProperty); }
             set { SetValue(FrameRateProperty, value); }
         }
-        
+
         /// <summary>
         /// The DrawFPS property.
         /// </summary>
         private static readonly DependencyProperty DrawFPSProperty =
-          DependencyProperty.Register("DrawFPS", typeof(bool), typeof(OpenGLControl),
+          DependencyProperty.Register("DrawFPS", typeof(bool), typeof(SceneView),
           new PropertyMetadata(false, null));
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace SharpGL.WPF
         {
             SceneView me = o as SceneView;
         }
-                
-                
+
+
     }
 }
