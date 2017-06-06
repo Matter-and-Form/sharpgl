@@ -1,7 +1,8 @@
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using SharpGL.RenderContextProviders;
 using SharpGL.Version;
-using System;
-using System.Runtime.InteropServices;
 
 namespace SharpGL
 {
@@ -1531,6 +1532,8 @@ namespace SharpGL
         [DllImport(LIBRARY_OPENGL, SetLastError = true)]
         private static extern void glTexImage1D(uint target, int level, uint internalformat, int width, int border, uint format, uint type, byte[] pixels);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)]
+        private static extern void glTexImage1D(uint target, int level, uint internalformat, int width, int border, uint format, uint type, IntPtr pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)]
         private static extern void glTexImage2D(uint target, int level, uint internalformat, int width, int height, int border, uint format, uint type, byte[] pixels);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)]
         private static extern void glTexImage2D(uint target, int level, uint internalformat, int width, int height, int border, uint format, uint type, IntPtr pixels);
@@ -1545,7 +1548,11 @@ namespace SharpGL
         [DllImport(LIBRARY_OPENGL, SetLastError = true)]
         private static extern void glTexSubImage1D(uint target, int level, int xoffset, int width, uint format, uint type, int[] pixels);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)]
+        private static extern void glTexSubImage1D(uint target, int level, int xoffset, int width, uint format, uint type, IntPtr pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)]
         private static extern void glTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, int[] pixels);
+        [DllImport(LIBRARY_OPENGL, SetLastError = true)]
+        private static extern void glTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, IntPtr pixels);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)]
         private static extern void glTranslated(double x, double y, double z);
         [DllImport(LIBRARY_OPENGL, SetLastError = true)]
@@ -6130,7 +6137,7 @@ namespace SharpGL
         /// <summary>
         /// This function sets the image for the currently binded texture.
         /// </summary>
-        /// <param name="target">The type of texture, TEXTURE_2D or PROXY_TEXTURE_2D.</param>
+        /// <param name="target">The type of texture, TEXTURE_1D or PROXY_TEXTURE_1D.</param>
         /// <param name="level">For mip-map textures, ordinary textures should be '0'.</param>
         /// <param name="internalformat">The format of the data you are want OpenGL to create, e.g  RGB16.</param>
         /// <param name="width">The width of the texture image (must be a power of 2, e.g 64).</param>
@@ -6143,6 +6150,24 @@ namespace SharpGL
             PreGLCall();
             glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
             PostGLCall();
+        }
+
+        /// <summary>
+        /// This function sets the image for the currently binded texture.
+        /// </summary>
+        /// <param name="target">The type of texture, TEXTURE_1D or PROXY_TEXTURE_1D.</param>
+        /// <param name="level">For mip-map textures, ordinary textures should be '0'.</param>
+        /// <param name="internalformat">The format of the data you are want OpenGL to create, e.g  RGB16.</param>
+        /// <param name="width">The width of the texture image (must be a power of 2, e.g 64).</param>
+        /// <param name="border">The width of the border (0 or 1).</param>
+        /// <param name="format">The format of the data you are passing, e.g. RGBA.</param>
+        /// <param name="type">The type of data you are passing, e.g GL_BYTE.</param>
+        /// <param name="pixels">Specifies a pointer to the image data in memory.</param>
+        public void TexImage1D(uint target, int level, uint internalformat, int width, int border, uint format, uint type, IntPtr pixels)
+        {
+          PreGLCall();
+          glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
+          PostGLCall();
         }
 
         /// <summary>
@@ -6175,7 +6200,7 @@ namespace SharpGL
         /// <param name="border">The width of the border (0 or 1).</param>
         /// <param name="format">The format of the data you are passing, e.g. RGBA.</param>
         /// <param name="type">The type of data you are passing, e.g GL_BYTE.</param>
-        /// <param name="pixels">The actual pixel data.</param>
+        /// <param name="pixels">Specifies a pointer to the image data in memory.</param>
         public void TexImage2D(uint target, int level, uint internalformat, int width, int height, int border, uint format, uint type, IntPtr pixels)
         {
             PreGLCall();
@@ -6288,15 +6313,15 @@ namespace SharpGL
         }
 
         /// <summary>
-        /// Specify a two-dimensional texture subimage.
+        /// Specify a one-dimensional texture subimage.
         /// </summary>
         /// <param name="target">Specifies the target texture. Must be OpenGL.TEXTURE_1D.</param>
         /// <param name="level">Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.</param>
         /// <param name="xoffset">Specifies a texel offset in the x direction within the texture array.</param>
         /// <param name="width">Specifies the width of the texture subimage.</param>
         /// <param name="format">Specifies the format of the pixel data.</param>
-        /// <param name="type">Specifies the data type of the pixel    data.</param>
-        /// <param name="pixels">Specifies a pointer to the image data in memory.</param>
+        /// <param name="type">Specifies the data type of the pixel data.</param>
+        /// <param name="pixels">The actual pixel data.</param>
         public void TexSubImage1D(uint target, int level, int xoffset, int width, uint format, uint type, int[] pixels)
         {
             PreGLCall();
@@ -6305,22 +6330,58 @@ namespace SharpGL
         }
 
         /// <summary>
-        /// Specify a two-dimensional texture subimage.
+        /// Specify a one-dimensional texture subimage.
         /// </summary>
         /// <param name="target">Specifies the target texture. Must be OpenGL.TEXTURE_1D.</param>
+        /// <param name="level">Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.</param>
+        /// <param name="xoffset">Specifies a texel offset in the x direction within the texture array.</param>
+        /// <param name="width">Specifies the width of the texture subimage.</param>
+        /// <param name="format">Specifies the format of the pixel data.</param>
+        /// <param name="type">Specifies the data type of the pixel data.</param>
+        /// <param name="pixels">Specifies a pointer to the image data in memory.</param>
+        public void TexSubImage1D(uint target, int level, int xoffset, int width, uint format, uint type, IntPtr pixels)
+        {
+          PreGLCall();
+          glTexSubImage1D(target, level, xoffset, width, format, type, pixels);
+          PostGLCall();
+        }
+
+        /// <summary>
+        /// Specify a two-dimensional texture subimage.
+        /// </summary>
+        /// <param name="target">Specifies the target texture. Must be OpenGL.TEXTURE_2D.</param>
         /// <param name="level">Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.</param>
         /// <param name="xoffset">Specifies a texel offset in the x direction within the texture array.</param>
         /// <param name="yoffset">Specifies a texel offset in the y direction within the texture array.</param>
         /// <param name="width">Specifies the width of the texture subimage.</param>
         /// <param name="height">Specifies the height of the texture subimage.</param>
         /// <param name="format">Specifies the format of the pixel data.</param>
-        /// <param name="type">Specifies the data type of the pixel    data.</param>
-        /// <param name="pixels">Specifies a pointer to the image data in memory.</param>
+        /// <param name="type">Specifies the data type of the pixel data.</param>
+        /// <param name="pixels">The actual pixel data.</param>
         public void TexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, int[] pixels)
         {
             PreGLCall();
             glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
             PostGLCall();
+        }
+
+        /// <summary>
+        /// Specify a two-dimensional texture subimage.
+        /// </summary>
+        /// <param name="target">Specifies the target texture. Must be OpenGL.TEXTURE_2D.</param>
+        /// <param name="level">Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.</param>
+        /// <param name="xoffset">Specifies a texel offset in the x direction within the texture array.</param>
+        /// <param name="yoffset">Specifies a texel offset in the y direction within the texture array.</param>
+        /// <param name="width">Specifies the width of the texture subimage.</param>
+        /// <param name="height">Specifies the height of the texture subimage.</param>
+        /// <param name="format">Specifies the format of the pixel data.</param>
+        /// <param name="type">Specifies the data type of the pixel data.</param>
+        /// <param name="pixels">Specifies a pointer to the image data in memory.</param>
+        public void TexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, IntPtr pixels)
+        {
+          PreGLCall();
+          glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
+          PostGLCall();
         }
 
         /// <summary>

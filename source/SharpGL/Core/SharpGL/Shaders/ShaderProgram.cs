@@ -9,6 +9,7 @@ namespace SharpGL.Shaders
     {
         private readonly Shader vertexShader = new Shader();
         private readonly Shader fragmentShader = new Shader();
+        private bool linkProgramDone;
 
         /// <summary>
         /// Creates the shader program.
@@ -40,6 +41,7 @@ namespace SharpGL.Shaders
 
             //  Now we can link the program.
             gl.LinkProgram(shaderProgramObject);
+            linkProgramDone = true;
 
             //  Now that we've compiled and linked the shader, check it's link status. If it's not linked properly, we're
             //  going to throw an exception.
@@ -67,6 +69,43 @@ namespace SharpGL.Shaders
         public void BindAttributeLocation(OpenGL gl, uint location, string attribute)
         {
             gl.BindAttribLocation(shaderProgramObject, location, attribute);
+
+            //  If necessary we must call link program again as else the new attribute location isn't set.
+            if (linkProgramDone)
+            {
+                //  Now we link the program again.
+                gl.LinkProgram(shaderProgramObject);
+
+                //  Now that we've compiled and linked the shader, check it's link status. If it's not linked properly, we're
+                //  going to throw an exception.
+                if (GetLinkStatus(gl) == false)
+                {
+                    throw new ShaderCompilationException(string.Format("Failed to link shader program with ID {0}.", shaderProgramObject), GetInfoLog(gl));
+                }
+            }
+        }
+
+        public void BindAttributeLocation(OpenGL gl, Dictionary<uint, string> attributeLocations)
+        {
+            if (attributeLocations != null)
+            {
+                foreach (var vertexAttributeLocation in attributeLocations)
+                    gl.BindAttribLocation(shaderProgramObject, vertexAttributeLocation.Key, vertexAttributeLocation.Value);
+
+                //  If necessary we must call link program again as else the new attribute location isn't set.
+                if (linkProgramDone)
+                {
+                    //  Now we link the program again.
+                    gl.LinkProgram(shaderProgramObject);
+
+                    //  Now that we've compiled and linked the shader, check it's link status. If it's not linked properly, we're
+                    //  going to throw an exception.
+                    if (GetLinkStatus(gl) == false)
+                    {
+                        throw new ShaderCompilationException(string.Format("Failed to link shader program with ID {0}.", shaderProgramObject), GetInfoLog(gl));
+                    }
+                }
+            }
         }
 
         public void Bind(OpenGL gl)
@@ -110,24 +149,74 @@ namespace SharpGL.Shaders
                 throw new Exception(GetInfoLog(gl));
         }
 
-        public void SetUniform1(OpenGL gl, string uniformName, float v1)
+        public void SetUniform1(OpenGL gl, string uniformName, int v0)
         {
-            gl.Uniform1(GetUniformLocation(gl, uniformName), v1);
+            gl.Uniform1(GetUniformLocation(gl, uniformName), v0);
         }
 
-        public void SetUniform3(OpenGL gl, string uniformName, float v1, float v2, float v3)
+        public void SetUniform2(OpenGL gl, string uniformName, int v0, int v1)
         {
-            gl.Uniform3(GetUniformLocation(gl, uniformName), v1, v2, v3);
+            gl.Uniform2(GetUniformLocation(gl, uniformName), v0, v1);
+        }
+
+        public void SetUniform3(OpenGL gl, string uniformName, int v0, int v1, int v2)
+        {
+            gl.Uniform3(GetUniformLocation(gl, uniformName), v0, v1, v2);
+        }
+
+        public void SetUniform4(OpenGL gl, string uniformName, int v0, int v1, int v2, int v3)
+        {
+            gl.Uniform4(GetUniformLocation(gl, uniformName), v0, v1, v2, v3);
+        }
+
+        public void SetUniform1(OpenGL gl, string uniformName, float v0)
+        {
+            gl.Uniform1(GetUniformLocation(gl, uniformName), v0);
+        }
+
+        public void SetUniform2(OpenGL gl, string uniformName, float v0, float v1)
+        {
+            gl.Uniform2(GetUniformLocation(gl, uniformName), v0, v1);
+        }
+
+        public void SetUniform3(OpenGL gl, string uniformName, float v0, float v1, float v2)
+        {
+            gl.Uniform3(GetUniformLocation(gl, uniformName), v0, v1, v2);
+        }
+
+        public void SetUniform4(OpenGL gl, string uniformName, float v0, float v1, float v2, float v3)
+        {
+            gl.Uniform4(GetUniformLocation(gl, uniformName), v0, v1, v2, v3);
+        }
+
+        public void SetUniformMatrix2(OpenGL gl, string uniformName, float[] m)
+        {
+            SetUniformMatrix2(gl, uniformName, 1, false, m);
+        }
+
+        public void SetUniformMatrix2(OpenGL gl, string uniformName, int count, bool transpose, float[] m)
+        {
+            gl.UniformMatrix2(GetUniformLocation(gl, uniformName), count, transpose, m);
         }
 
         public void SetUniformMatrix3(OpenGL gl, string uniformName, float[] m)
         {
-            gl.UniformMatrix3(GetUniformLocation(gl, uniformName), 1, false, m);
+            SetUniformMatrix3(gl, uniformName, 1, false, m);
+        }
+
+        public void SetUniformMatrix3(OpenGL gl, string uniformName, int count, bool transpose, float[] m)
+        {
+            gl.UniformMatrix3(GetUniformLocation(gl, uniformName), count, transpose, m);
         }
 
         public void SetUniformMatrix4(OpenGL gl, string uniformName, float[] m)
         {
-            gl.UniformMatrix4(GetUniformLocation(gl, uniformName), 1, false, m);
+            SetUniformMatrix4(gl, uniformName, 1, false, m);
+        }
+
+        public void SetUniformMatrix4(OpenGL gl, string uniformName, int count, bool transpose, float[] m)
+        {
+            gl.UniformMatrix4(GetUniformLocation(gl, uniformName), count, transpose, m);
         }
 
         public int GetUniformLocation(OpenGL gl, string uniformName)

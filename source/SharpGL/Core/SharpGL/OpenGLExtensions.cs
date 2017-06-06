@@ -1553,7 +1553,7 @@ namespace SharpGL
         {
             GetDelegateFor<glVertexAttrib4usv>()(index, v);
         }
-        public void VertexAttribPointer(uint index, int size, uint type, bool normalized, int stride, IntPtr pointer)
+        public void VertexAttribPointer(uint index, int size, uint type, bool normalized, uint stride, IntPtr pointer)
         {
             GetDelegateFor<glVertexAttribPointer>()(index, size, type, normalized, stride, pointer);
         }
@@ -1657,7 +1657,7 @@ namespace SharpGL
         private delegate void glVertexAttrib4ubv(uint index, byte[] v);
         private delegate void glVertexAttrib4uiv(uint index, uint[] v);
         private delegate void glVertexAttrib4usv(uint index, ushort[] v);
-        private delegate void glVertexAttribPointer(uint index, int size, uint type, bool normalized, int stride, IntPtr pointer);
+        private delegate void glVertexAttribPointer(uint index, int size, uint type, bool normalized, uint stride, IntPtr pointer);
 
         //  Constants
         public const uint GL_BLEND_EQUATION_RGB = 0x8009;

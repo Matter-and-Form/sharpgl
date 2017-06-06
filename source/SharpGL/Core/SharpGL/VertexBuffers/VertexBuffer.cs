@@ -14,6 +14,30 @@ namespace SharpGL.VertexBuffers
     /// </remarks>
     public class VertexBuffer
     {
+        public void SetAttributeData(OpenGL gl, uint attributeIndex, int size, bool isNormalised)
+        {
+            SetAttributeData(gl, attributeIndex, size, isNormalised, 0, 0, false);
+        }
+
+        public void SetAttributeData(OpenGL gl, uint attributeIndex, int size, bool isNormalised, uint stride, bool customStrideCalculation = false)
+        {
+            SetAttributeData(gl, attributeIndex, size, isNormalised, stride, 0, customStrideCalculation);
+        }
+
+        public void SetAttributeData(OpenGL gl, uint attributeIndex, int size, bool isNormalised, uint stride, int offset, bool customStrideAndOffsetCalculation = false)
+        {
+            if (customStrideAndOffsetCalculation)
+            {
+                gl.VertexAttribPointer(attributeIndex, size, OpenGL.GL_FLOAT, isNormalised, stride, new IntPtr(offset));
+            }
+            else
+            {
+                gl.VertexAttribPointer(attributeIndex, size, OpenGL.GL_FLOAT, isNormalised, stride * sizeof(float), new IntPtr(offset * sizeof(float)));
+            }
+
+            gl.EnableVertexAttribArray(attributeIndex);
+        }
+
         public void Create(OpenGL gl)
         {
             //  Generate the vertex array.
@@ -22,12 +46,11 @@ namespace SharpGL.VertexBuffers
             vertexBufferObject = ids[0];
         }
 
-        public void SetData(OpenGL gl, uint attributeIndex, float[] rawData, bool isNormalised, int stride)
+
+        public void SetData(OpenGL gl, float[] rawData)
         {
             //  Set the data, specify its shape and assign it to a vertex attribute (so shaders can bind to it).
             gl.BufferData(OpenGL.GL_ARRAY_BUFFER, rawData, OpenGL.GL_STATIC_DRAW);
-            gl.VertexAttribPointer(attributeIndex, stride, OpenGL.GL_FLOAT, isNormalised, 0, IntPtr.Zero);
-            gl.EnableVertexAttribArray(attributeIndex);
         }
 
         public void Bind(OpenGL gl)

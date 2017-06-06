@@ -120,13 +120,15 @@ namespace ModernOpenGLSample
             var vertexDataBuffer = new VertexBuffer();
             vertexDataBuffer.Create(gl);
             vertexDataBuffer.Bind(gl);
-            vertexDataBuffer.SetData(gl, 0, vertices, false, 3);
+            vertexDataBuffer.SetData(gl, vertices);
+            vertexDataBuffer.SetAttributeData(gl, 0, 3, false);
 
             //  Now do the same for the colour data.
             var colourDataBuffer = new VertexBuffer();
             colourDataBuffer.Create(gl);
             colourDataBuffer.Bind(gl);
-            colourDataBuffer.SetData(gl, 1, colors, false, 3);
+            colourDataBuffer.SetData(gl, colors);
+            colourDataBuffer.SetAttributeData(gl, 1, 3, false);
 
             //  Unbind the vertex array, we've finished specifying data for it.
             vertexBufferArray.Unbind(gl);

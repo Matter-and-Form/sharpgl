@@ -204,17 +204,15 @@ namespace ObjectLoadingSample
             var verticesVertexBuffer = new VertexBuffer();
             verticesVertexBuffer.Create(gl);
             verticesVertexBuffer.Bind(gl);
-            verticesVertexBuffer.SetData(gl, VertexAttributes.Position,
-                                 mesh.vertices.SelectMany(v => v.to_array()).ToArray(),
-                                 false, 3);
+            verticesVertexBuffer.SetData(gl, mesh.vertices.SelectMany(v => v.to_array()).ToArray());
+            verticesVertexBuffer.SetAttributeData(gl, VertexAttributes.Position, 3, false);
             if (mesh.normals != null)
             {
                 var normalsVertexBuffer = new VertexBuffer();
                 normalsVertexBuffer.Create(gl);
                 normalsVertexBuffer.Bind(gl);
-                normalsVertexBuffer.SetData(gl, VertexAttributes.Normal,
-                                            mesh.normals.SelectMany(v => v.to_array()).ToArray(),
-                                            false, 3);
+                normalsVertexBuffer.SetData(gl, mesh.normals.SelectMany(v => v.to_array()).ToArray());
+                normalsVertexBuffer.SetAttributeData(gl, VertexAttributes.Normal, 3, false);
             }
 
             if (mesh.uvs != null)
@@ -222,9 +220,8 @@ namespace ObjectLoadingSample
                 var texCoordsVertexBuffer = new VertexBuffer();
                 texCoordsVertexBuffer.Create(gl);
                 texCoordsVertexBuffer.Bind(gl);
-                texCoordsVertexBuffer.SetData(gl, VertexAttributes.TexCoord,
-                                              mesh.uvs.SelectMany(v => v.to_array()).ToArray(),
-                                              false, 2);
+                texCoordsVertexBuffer.SetData(gl, mesh.uvs.SelectMany(v => v.to_array()).ToArray());
+                texCoordsVertexBuffer.SetAttributeData(gl, VertexAttributes.TexCoord, 2, false);
             }
             //  We're done creating the vertex buffer array - unbind it and add it to the dictionary.
             verticesVertexBuffer.Unbind(gl);
