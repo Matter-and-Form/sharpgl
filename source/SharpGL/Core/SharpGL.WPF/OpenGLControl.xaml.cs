@@ -4,6 +4,7 @@ using SharpGL.Version;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -112,7 +113,8 @@ namespace SharpGL.WPF
 
                 // JWH - FOR NEW RENDER METHOD
                 // Force re-creation of image buffer since size has changed
-                m_imageBuffer = null;
+                if (m_writeableBitmap?.CanFreeze == true)
+                    m_writeableBitmap.Freeze();
             }
         }
 
@@ -161,22 +163,22 @@ namespace SharpGL.WPF
             gl.ThrowIfErrors();
 
             //  Fire the OpenGL initialised event.
-            var handler = OpenGLInitialized;
-            if (handler != null)
-                handler(this, eventArgsFast);
+            OpenGLInitialized?.Invoke(this, eventArgsFast);
 
             timer.Interval = new TimeSpan(0, 0, 0, 0, (int)(1000.0 / FrameRate));
         }
 
         // JWH - Fields to support the WritableBitmap method of rendering the image for display
-        byte[] m_imageBuffer;
         WriteableBitmap m_writeableBitmap;
         Int32Rect m_imageRect;
-        int m_imageStride;
+        int m_imageSize;
         double m_dpiX = 0;
         double m_dpiY = 0;
         PixelFormat m_format = PixelFormats.Bgra32;
         int m_bytesPerPixel = 32 >> 3;
+
+        [DllImport("Kernel32.dll", EntryPoint = "RtlMoveMemory")]
+        public static extern void CopyMemory(IntPtr Destination, IntPtr Source, int Length);
 
         /// <summary>
         /// JWH - FOR NEW RENDER METHOD
@@ -213,24 +215,25 @@ namespace SharpGL.WPF
                 }
             }
 
+
+
             // If the image buffer is null, create it
             // This should happen when the size of the image changes
-            if (m_imageBuffer == null)
+            if (m_writeableBitmap == null || m_writeableBitmap.IsFrozen)
             {
                 int width = gl.RenderContextProvider.Width;
                 int height = gl.RenderContextProvider.Height;
-
-                int imageBufferSize = width * height * m_bytesPerPixel;
-                m_imageBuffer = new byte[imageBufferSize];
+                m_imageSize = width * height * m_bytesPerPixel;
                 m_writeableBitmap = new WriteableBitmap(width, height, m_dpiX, m_dpiY, m_format, null);
                 m_imageRect = new Int32Rect(0, 0, width, height);
-                m_imageStride = width * m_bytesPerPixel;
                 image.Source = m_writeableBitmap;
             }
 
             // Fill the image buffer from the bits and create the writeable bitmap
-            System.Runtime.InteropServices.Marshal.Copy(bits, m_imageBuffer, 0, m_imageBuffer.Length);
-            m_writeableBitmap.WritePixels(m_imageRect, m_imageBuffer, m_imageStride, 0);
+            m_writeableBitmap.Lock();
+            CopyMemory(m_writeableBitmap.BackBuffer, bits, m_imageSize);
+            m_writeableBitmap.AddDirtyRect(m_imageRect);
+            m_writeableBitmap.Unlock();
         }
 
         public BitmapSource Snapshot(int width, int height)
@@ -273,7 +276,9 @@ namespace SharpGL.WPF
                     }
                 }
 
-                return new TransformedBitmap(m_writeableBitmap, new ScaleTransform(1.0, -1.0));
+                BitmapSource toReturn = new TransformedBitmap(m_writeableBitmap, new ScaleTransform(1.0, -1.0));
+                toReturn.Freeze();
+                return toReturn;
             }
             finally
             {
