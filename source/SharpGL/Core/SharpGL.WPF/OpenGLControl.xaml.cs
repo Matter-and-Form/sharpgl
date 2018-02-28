@@ -306,9 +306,6 @@ namespace SharpGL.WPF
             //  Lock on OpenGL.
             lock (gl)
             {
-                //  Start the stopwatch so that we can time the rendering.
-                stopwatch.Restart();
-
                 //  Make GL current.
                 gl.MakeCurrent();
 
@@ -318,13 +315,6 @@ namespace SharpGL.WPF
                     handler(this, eventArgsFast);
                 else
                     gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);
-
-                //  Draw the FPS.
-                if (DrawFPS)
-                {
-                    gl.DrawText(5, 5, 1.0f, 0.0f, 0.0f, "Courier New", 12.0f, string.Format("Draw Time: {0:0.0000} ms ~ {1:0.0} FPS", frameTime, 1000.0 / frameTime));
-                    gl.Flush();
-                }
 
                 //  Render.
                 gl.Blit(IntPtr.Zero);
@@ -364,12 +354,6 @@ namespace SharpGL.WPF
                     default:
                         break;
                 }
-
-                //  Stop the stopwatch.
-                stopwatch.Stop();
-
-                //  Store the frame time.
-                frameTime = stopwatch.Elapsed.TotalMilliseconds;
             }
         }
 
@@ -431,16 +415,6 @@ namespace SharpGL.WPF
         /// The dispatcher timer.
         /// </summary>
         DispatcherTimer timer = null;
-
-        /// <summary>
-        /// A stopwatch used for timing rendering.
-        /// </summary>
-        protected Stopwatch stopwatch = new Stopwatch();
-
-        /// <summary>
-        /// The last frame time in milliseconds.
-        /// </summary>
-        protected double frameTime = 0;
 
         /// <summary>
         /// Occurs when OpenGL should be initialised.
